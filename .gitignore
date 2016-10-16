@@ -1,0 +1,8 @@
+.idea/
+config.py
+tmp/
+*/.DS_Store
+app/static/.DS_Store
+.DS_Store
+*.pyc
+*.css

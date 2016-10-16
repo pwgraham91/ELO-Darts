@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block head %}
+	<script type="text/javascript" src="/static/js/add_user.js"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="container add-user">
+		<h1>Add A User</h1>
+
+		<div class="form-block">
+			<label for="username">Username</label>
+			<input type="text" name="username">
+		</div>
+		<div class="form-block">
+			<label for="email">Email</label>
+			<input type="email" name="email">
+		</div>
+		<button id="submit-user" class="btn btn-default">Submit</button>
+	</div>
+{% endblock %}
