@@ -1,5 +1,6 @@
 import flask
 from app import app, db
+from app.models import User
 from app.views.handlers.profile_handler import get_profile_data
 
 
@@ -10,7 +11,10 @@ def get_profile(user_id):
 
     user, results = get_profile_data(session, user_id)
 
+    active_users = session.query(User).all()
+
     return flask.render_template('user.html',
                                  title=user.name,
                                  user=user,
+                                 active_users=active_users,
                                  results=results)
