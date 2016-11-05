@@ -100,7 +100,8 @@
         <div class="container has-text-centered">
             <div class="">
                 <span class="select is-large">
-                    <select class="is-success">
+                    <select class="select-winner is-success">
+                        <option class="is-hidden" selected="true" disabled="disabled">Select Player</option>
                         {% for user in active_users %}
                         <option value="{{ user.id }}">{{ user.name }}</option>
                         {% endfor %}
@@ -112,7 +113,8 @@
             <br>
             <div class="">
                 <span class="select is-large">
-                    <select class="is-danger">
+                    <select class="select-loser is-danger">
+                        <option class="is-hidden" selected="true" disabled="disabled">Select Player</option>
                         {% for user in active_users %}
                         <option value="{{ user.id }}">{{ user.name }}</option>
                         {% endfor %}

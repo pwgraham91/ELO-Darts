@@ -17,8 +17,8 @@ $(document).ready(function() {
 			type: "POST",
 			url: '/games/add',
 			data: JSON.stringify({
-				winner_id: $('select.is-success option:selected').val(),
-				loser_id: $('select.is-danger option:selected').val()
+				winner_id: $('select.select-winner option:selected').val(),
+				loser_id: $('select.select-loser option:selected').val()
 			}),
 			success: function (data) {
 				console.log(data);
