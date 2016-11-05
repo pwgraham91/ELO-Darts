@@ -1,41 +1,89 @@
 <html>
-	<head>
-		{% if title %}
-			<title>{{ title }}</title>
-		{% else %}
-			<title></title>
-		{% endif %}
-		<link href="/static/bulma-0.2.3/css/bulma.css" rel="stylesheet" media="screen">
-		<link href="/static/css/base.css" rel="stylesheet">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<head>
+  {% if title %}
+  <title>{{ title }}</title>
+  {% else %}
+  <title></title>
+  {% endif %}
+  <link href="/static/bulma-0.2.3/css/bulma.css" rel="stylesheet" media="screen">
+  <link href="/static/css/base.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
-		<script type="text/javascript" src="/static/js/imports/jquery-3.1.0.min.js"></script>
-		{% block head %}{% endblock %}
-	</head>
+  <script type="text/javascript" src="/static/js/imports/jquery-3.1.0.min.js"></script>
+  {% block head %}{% endblock %}
+</head>
 
-	<body>
-		<div>
-			<a href="{{ url_for('index') }}">Home</a>
-			{% if g.user.is_authenticated %}
-				| <a href="/user/{{ g.user.id }}">Profile</a>
-				| <a href="{{ url_for('logout') }}">Logout</a>
-			{% else %}
-				| <a href="{{ url_for('login') }}">Login</a>
-			{% endif %}
-		</div>
-		<hr>
+<body>
+  <section class="hero is-primary">
+    <div class="hero-head">
+      <div class="container">
+        <nav class="nav">
+          <div class="nav-left">
+            {% if g.user.is_authenticated %}
+                <a class="nav-item " href="/user/{{ g.user.id }}">{{ user.name }}</a>
+                <a class="nav-item " href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="nav-item " href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+          </div>
 
-		{% with messages = get_flashed_messages() %}
-			{% if messages %}
-				<ul>
-					{% for message in messages %}
-						<li>{{ message }} </li>
-					{% endfor %}
-				</ul>
-			{% endif %}
-		{% endwith %}
-		<div class="container">
-			{% block content %}{% endblock %}
-		</div>
-	</body>
+          <div class="nav-center">
+            <a class="nav-item" href="https://github.com/pwgraham91/ELO-Darts">
+              <span class="icon">
+                <i class="fa fa-github"></i>
+              </span>
+            </a>
+          </div>
+
+          <span id="nav-toggle" class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+
+          <div id="nav-menu" class="nav-right nav-menu">
+            <a class="nav-item " href="{{ url_for('index') }}">Rankings</a>
+          </div>
+        </nav>
+
+      </div>
+    </div>
+
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-vcentered">
+          <div class="column">
+            <p class="title">
+              Cratejoy Elo Dart Rankings
+            </p>
+            <p class="subtitle">
+              Want to know how we rank? Check out the <a href="http://trueskill.org/">TrueSkill</a> rating system!
+            </p>
+          </div>
+          <div class="column is-narrow">
+              <a class="button is-primary is-inverted is-large" href="https://github.com/jgthms/bulma/archive/0.2.3.zip">
+                <span class="icon">
+                  <i class="fa fa-plus-square"></i>
+                </span>
+                <span>Add game</span>
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }} </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</body>
 </html>
