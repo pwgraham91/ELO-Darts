@@ -33,7 +33,7 @@ def get_google_authorization_url():
 
     # todo: offline might be wrong
     auth_url, state = google.authorization_url(
-        Auth.AUTH_URI, access_type='offline')
+        Auth.AUTH_URI)
 
     flask.session['oauth_state'] = state
     return auth_url

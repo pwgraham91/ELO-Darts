@@ -57,7 +57,7 @@ def callback():
         resp = google.get(Auth.USER_INFO)
         if resp.status_code == 200:
             user_data = resp.json()
-            if user_data['hd'] != 'cratejoy.com':
+            if user_data.get('hd') != 'cratejoy.com':
                 return 'Only cratejoy.com emails allowed'
             email = user_data['email']
             user = User.query.filter_by(email=email).first()
