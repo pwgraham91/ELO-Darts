@@ -1,6 +1,7 @@
 import flask
 from app import app, db
 from app.models import User
+from app.views.handlers.auth_handler import get_google_authorization_url
 
 
 @app.route('/')
@@ -16,4 +17,5 @@ def index():
     return flask.render_template('index.html',
                                  title='Home',
                                  current_user=current_user,
-                                 active_users=active_users)
+                                 active_users=active_users,
+                                 auth_url=get_google_authorization_url())
