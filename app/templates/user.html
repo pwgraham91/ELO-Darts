@@ -1,4 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-	<h1>{{ user.name }}</h1>
+
+<section class="section">
+<table class="table">
+  <thead>
+    <tr>
+      <th>{{ user.name }}</th>
+      <th>{{ user.elo }}</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for game in games %}
+    <tr>
+        <td>{{ game.id }}</td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+</section>
+
 {% endblock %}
