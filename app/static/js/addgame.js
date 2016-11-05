@@ -3,13 +3,13 @@ console.log('add game')
 
 $(document).ready(function() {
 	$('.modal-button').click(function(event) {
-	event.preventDefault();
+		event.preventDefault();
 		$('.modal').addClass('is-active');
 	});
 
 	$('#modal-cancel, #modal-delete').click(function(event) {
 		event.preventDefault();
-	$('.modal').removeClass('is-active');
+		$('.modal').removeClass('is-active');
 	});
 
 	$('#add-game').click(function () {
@@ -21,10 +21,12 @@ $(document).ready(function() {
 				loser_id: $('select.is-danger option:selected').val()
 			}),
 			success: function (data) {
-				console.log(data)
+				console.log(data);
+				$('.modal').removeClass('is-active');
 			},
 			error: function (data) {
-				console.log(data)
+				console.log(data);
+				$('.modal').removeClass('is-active');
 			},
 			contentType: 'application/json'
 		});

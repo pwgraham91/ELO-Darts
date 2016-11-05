@@ -13,7 +13,7 @@
 
     {% for user in active_users | sort(attribute='elo', reverse=True) %}
     <tr>
-        <td>{{ user.name }}</td>
+        <td><a href="/profile/{{ user.id }}">{{ user.name }}</a></td>
         <td>{{ user.elo }}</td>
     </tr>
     {% endfor %}

@@ -3,21 +3,39 @@
 
 <section class="section">
 <table class="table">
-  <thead>
-    <tr>
-      <th>{{ user.name }}</th>
-      <th>{{ user.elo }}</th>
-    </tr>
-  </thead>
-  <tbody>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>ELO</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.elo }}</td>
+        </tr>
+    </tbody>
+</table>
 
-    {% for game in games %}
-    <tr>
-        <td>{{ game.id }}</td>
-    </tr>
-    {% endfor %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Opponent</th>
+            <th>Outcome</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
 
-  </tbody>
+        {% for result in results %}
+        <tr>
+            <td><a href="/profile/{{ result.opponent_id }}">{{ result.opponent_id }}</a></td>
+            <td>{{ result.outcome }}</td>
+            <td>{{ result.date }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
 </table>
 </section>
 
