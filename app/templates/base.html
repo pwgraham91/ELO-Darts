@@ -20,10 +20,10 @@
         <nav class="nav">
           <div class="nav-left">
             {% if g.user.is_authenticated %}
-                <a class="nav-item " href="/user/{{ g.user.id }}">{{ g.user.name }}</a>
-                <a class="nav-item " href="{{ url_for('logout') }}">Logout</a>
+                <a class="nav-item" href="/profile/{{ g.user.id }}">{{ g.user.name }}</a>
+                <a class="nav-item" href="{{ url_for('logout') }}">Logout</a>
             {% else %}
-                <a class="nav-item " href="{{ auth_url }}">Login With Google</a>
+                <a class="nav-item" href="{{ auth_url }}">Login With Google</a>
             {% endif %}
           </div>
 
@@ -100,9 +100,11 @@
         <div class="container has-text-centered">
             <div class="">
                 <span class="select is-large">
-                    <select class="is-success">
-                        <option>Select dropdown</option>
-                        <option>With options</option>
+                    <select class="select-winner is-success">
+                        <option class="is-hidden" selected="true" disabled="disabled">Select Player</option>
+                        {% for user in active_users %}
+                        <option value="{{ user.id }}">{{ user.name }}</option>
+                        {% endfor %}
                     </select>
                 </span>
             </div>
@@ -111,9 +113,11 @@
             <br>
             <div class="">
                 <span class="select is-large">
-                    <select class="is-danger">
-                        <option>Select dropdown</option>
-                        <option>With options</option>
+                    <select class="select-loser is-danger">
+                        <option class="is-hidden" selected="true" disabled="disabled">Select Player</option>
+                        {% for user in active_users %}
+                        <option value="{{ user.id }}">{{ user.name }}</option>
+                        {% endfor %}
                     </select>
                 </span>
             </div>
@@ -121,21 +125,12 @@
         <br>
     </section>
     <footer class="modal-card-foot">
-      <a class="button is-primary is-medium" id="modal-submit">Submit</a>
+      <a class="button is-primary is-medium" id="add-game">Submit</a>
       <a class="button is-medium" id="modal-cancel">Cancel</a>
     </footer>
   </div>
 </div>
 </body>
-
-<script type="text/javascript">
-$('.modal-button').click(function(event) {
-  event.preventDefault();
-  $('.modal').addClass('is-active');
-});
-$('#modal-cancel, #modal-delete').click(function(event) {
-  event.preventDefault();
-  $('.modal').removeClass('is-active');
-});
-</script>
 </html>
+
+<script type="text/javascript" src="/static/js/addgame.js"></script>

@@ -1,4 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-	<h1>{{ user.name }}</h1>
+
+<section class="section">
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>ELO</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.elo }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Opponent</th>
+            <th>Outcome</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for result in results %}
+        <tr>
+            <td><a href="/profile/{{ result.opponent_id }}">{{ result.opponent_name }}</a></td>
+            <td>{{ result.outcome }}</td>
+            <td>{{ result.date }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+</section>
+
 {% endblock %}

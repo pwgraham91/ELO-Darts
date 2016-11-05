@@ -27,6 +27,9 @@ def add_game(session, winner_id, loser_id, submitted_by_id):
     winner.elo = winner_elo
     loser.elo = loser_elo
 
+    winner.wins = winner.wins + 1
+    loser.losses = loser.losses + 1
+
     session.add_all([new_game, winner, loser])
 
     return new_game
