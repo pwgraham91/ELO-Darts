@@ -9,7 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     admin = db.Column(db.Boolean, default=False)
 
-    elo = db.Column(db.Float, default=10.0)
+    elo = db.Column(db.Float, default=100.0)
 
     @property
     def is_authenticated(self):
@@ -34,9 +34,12 @@ class Game(db.Model):
     deleted_at = db.Column(db.DateTime)
 
     winner_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    winner_elo_score = db.Column(db.Float, nullable=False)
     loser_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    loser_elo_score = db.Column(db.Float, nullable=False)
     submitted_by_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
 
     winner = db.relationship("User", foreign_keys=[winner_id], backref=sqlalchemy.orm.backref('winners'))
     loser = db.relationship("User", foreign_keys=[loser_id], backref=sqlalchemy.orm.backref('losers'))
     submitted_by = db.relationship("User", foreign_keys=[submitted_by_id], backref=sqlalchemy.orm.backref('submitters'))
+
