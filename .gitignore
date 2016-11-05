@@ -6,3 +6,5 @@ app/static/.DS_Store
 .DS_Store
 *.pyc
 *.css
+node_modules/
+db_repository/
