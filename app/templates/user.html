@@ -12,7 +12,7 @@
     <tbody>
         <tr>
             <td>{{ user.name }}</td>
-            <td>{{ user.elo }}</td>
+            <td>{{ user.elo | round(3, 'common') }}</td>
         </tr>
     </tbody>
 </table>
