@@ -1,72 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-    <section class="section">
-    <table class="table">
+
+<section class="section">
+<table class="table">
   <thead>
     <tr>
       <th>Name</th>
-      <th>Instrument</th>
-      <th></th>
-      <th></th>
+      <th>ELO Rating</th>
     </tr>
   </thead>
   <tbody>
+
+    {% for user in active_users | sort(attribute='elo', reverse=True) %}
     <tr>
-      <td>Misty Abbott</td>
-      <td>Bass Guitar</td>
-      <td class="is-icon">
-        <a href="#">
-          <i class="fa fa-twitter"></i>
-        </a>
-      </td>
-      <td class="is-icon">
-        <a href="#">
-          <i class="fa fa-instagram"></i>
-        </a>
-      </td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.elo }}</td>
     </tr>
-    <tr>
-      <td>John Smith</td>
-      <td>Rhythm Guitar</td>
-      <td class="is-icon">
-        <a href="#">
-          <i class="fa fa-twitter"></i>
-        </a>
-      </td>
-      <td class="is-icon">
-        <a href="#">
-          <i class="fa fa-instagram"></i>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td>Robert Mikels</td>
-      <td>Lead Guitar</td>
-      <td class="is-icon">
-        <a href="#">
-          <i class="fa fa-twitter"></i>
-        </a>
-      </td>
-      <td class="is-icon">
-        <a href="#">
-          <i class="fa fa-instagram"></i>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td>Karyn Holmberg</td>
-      <td>Drums</td>
-      <td class="is-icon">
-        <a href="#">
-          <i class="fa fa-twitter"></i>
-        </a>
-      </td>
-      <td class="is-icon">
-        <a href="#">
-          <i class="fa fa-instagram"></i>
-        </a>
-      </td>
-    </tr>
+    {% endfor %}
+
   </tbody>
 </table>
 </section>
