@@ -15,7 +15,7 @@ def index():
     active_users = session.query(User).all()
 
     return flask.render_template('index.html',
-                                 title='Home',
+                                 title='Cratejoy Darts',
                                  current_user=current_user,
                                  active_users=active_users,
                                  auth_url=get_google_authorization_url())
