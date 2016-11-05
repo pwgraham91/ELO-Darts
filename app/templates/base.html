@@ -45,7 +45,6 @@
             <a class="nav-item " href="{{ url_for('index') }}">Rankings</a>
           </div>
         </nav>
-
       </div>
     </div>
 
@@ -61,12 +60,14 @@
             </p>
           </div>
           <div class="column is-narrow">
-              <a class="button is-primary is-inverted is-large" href="https://github.com/jgthms/bulma/archive/0.2.3.zip">
+              {% if g.user.is_authenticated %}
+              <a class="button is-primary is-inverted is-large modal-button" data-target="#modal">
                 <span class="icon">
                   <i class="fa fa-plus-square"></i>
                 </span>
                 <span>Add game</span>
               </a>
+              {% endif %}
           </div>
         </div>
       </div>
@@ -85,5 +86,56 @@
   <div class="container">
     {% block content %}{% endblock %}
   </div>
+
+
+<div class="modal" id="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Add game</p>
+      <button class="delete" id="modal-delete"></button>
+    </header>
+    <section class="modal-card-body">
+        <br>
+        <div class="container has-text-centered">
+            <div class="">
+                <span class="select is-large">
+                    <select>
+                        <option>Select dropdown</option>
+                        <option>With options</option>
+                    </select>
+                </span>
+            </div>
+            <br>
+            <h1 >defeated</h1>
+            <br>
+            <div class="">
+                <span class="select is-large">
+                    <select>
+                        <option>Select dropdown</option>
+                        <option>With options</option>
+                    </select>
+                </span>
+            </div>
+        </div>
+        <br>
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-primary is-medium" id="modal-submit">Submit</a>
+      <a class="button is-medium" id="modal-cancel">Cancel</a>
+    </footer>
+  </div>
+</div>
 </body>
+
+<script type="text/javascript">
+$('.modal-button').click(function(event) {
+  event.preventDefault();
+  $('.modal').addClass('is-active');
+});
+$('#modal-cancel, #modal-delete').click(function(event) {
+  event.preventDefault();
+  $('.modal').removeClass('is-active');
+});
+</script>
 </html>
