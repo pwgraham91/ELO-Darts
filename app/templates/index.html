@@ -1,8 +1,92 @@
 {% extends "base.html" %}
 {% block content %}
-	{% if g.user.is_authenticated %}
-    	<h1>Hi, {{ user.name }}!</h1>
-		{% if g.user.admin %}
-		{% endif %}
-	{% endif %}
+    <section class="section">
+    <table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Instrument</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Misty Abbott</td>
+      <td>Bass Guitar</td>
+      <td class="is-icon">
+        <a href="#">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </td>
+      <td class="is-icon">
+        <a href="#">
+          <i class="fa fa-instagram"></i>
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>John Smith</td>
+      <td>Rhythm Guitar</td>
+      <td class="is-icon">
+        <a href="#">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </td>
+      <td class="is-icon">
+        <a href="#">
+          <i class="fa fa-instagram"></i>
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>Robert Mikels</td>
+      <td>Lead Guitar</td>
+      <td class="is-icon">
+        <a href="#">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </td>
+      <td class="is-icon">
+        <a href="#">
+          <i class="fa fa-instagram"></i>
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>Karyn Holmberg</td>
+      <td>Drums</td>
+      <td class="is-icon">
+        <a href="#">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </td>
+      <td class="is-icon">
+        <a href="#">
+          <i class="fa fa-instagram"></i>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</section>
+
+
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Modal title</p>
+      <button class="delete"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-primary">Save changes</a>
+      <a class="button">Cancel</a>
+    </footer>
+  </div>
+</div>
+
 {% endblock %}
