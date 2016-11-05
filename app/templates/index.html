@@ -7,6 +7,8 @@
     <tr>
       <th>Name</th>
       <th>ELO Rating</th>
+      <th>Wins</th>
+      <th>Losses</th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +17,8 @@
     <tr>
         <td><a href="/profile/{{ user.id }}">{{ user.name }}</a></td>
         <td>{{ user.elo }}</td>
+        <td>{{ user.wins }}</td>
+        <td>{{ user.losses }}</td>
     </tr>
     {% endfor %}
 

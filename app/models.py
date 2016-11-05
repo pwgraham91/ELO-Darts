@@ -13,6 +13,8 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=sqlalchemy.func.now())
 
     elo = db.Column(db.Float, default=100.0)
+    wins = db.Column(db.Integer, default=0, nullable=False)
+    losses = db.Column(db.Integer, default=0, nullable=False)
 
     @property
     def is_authenticated(self):
@@ -28,6 +30,10 @@ class User(db.Model):
 
     def get_id(self):
         return unicode(self.id)
+
+    @property
+    def total_games(self):
+        return self.wins + self.losses
 
 
 class Game(db.Model):
