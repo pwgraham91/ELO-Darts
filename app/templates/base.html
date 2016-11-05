@@ -101,8 +101,9 @@
             <div class="">
                 <span class="select is-large">
                     <select class="is-success">
-                        <option>Select dropdown</option>
-                        <option>With options</option>
+                        {% for user in active_users %}
+                        <option value="{{ user.id }}">{{ user.name }}</option>
+                        {% endfor %}
                     </select>
                 </span>
             </div>
@@ -112,8 +113,9 @@
             <div class="">
                 <span class="select is-large">
                     <select class="is-danger">
-                        <option>Select dropdown</option>
-                        <option>With options</option>
+                        {% for user in active_users %}
+                        <option value="{{ user.id }}">{{ user.name }}</option>
+                        {% endfor %}
                     </select>
                 </span>
             </div>
@@ -121,21 +123,12 @@
         <br>
     </section>
     <footer class="modal-card-foot">
-      <a class="button is-primary is-medium" id="modal-submit">Submit</a>
+      <a class="button is-primary is-medium" id="add-game">Submit</a>
       <a class="button is-medium" id="modal-cancel">Cancel</a>
     </footer>
   </div>
 </div>
 </body>
-
-<script type="text/javascript">
-$('.modal-button').click(function(event) {
-  event.preventDefault();
-  $('.modal').addClass('is-active');
-});
-$('#modal-cancel, #modal-delete').click(function(event) {
-  event.preventDefault();
-  $('.modal').removeClass('is-active');
-});
-</script>
 </html>
+
+<script type="text/javascript" src="/static/js/addgame.js"></script>
