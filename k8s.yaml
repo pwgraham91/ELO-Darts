@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: peter-darts
+  name: elo-py
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: elo-py
+    spec:
+      imagePullSecrets:
+        - name: ecr
+      containers:
+      - name: elo
+        image: 841163038363.dkr.ecr.us-east-1.amazonaws.com/nrmitchi/cratejoy:peter-4
+        ports:
+        - containerPort: 5000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: darts-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: elo-py
+  ports:
+  - port: 80
+    targetPort: 5000
