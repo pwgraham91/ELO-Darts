@@ -1,3 +1,6 @@
 #!flask/bin/python
+
 from app import app
-app.run(debug=True)
+import config
+
+app.run(debug=config.debug, port=8000)
