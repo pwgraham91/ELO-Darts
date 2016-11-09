@@ -35,6 +35,21 @@ class User(db.Model):
     def total_games(self):
         return self.wins + self.losses
 
+    @property
+    def dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'admin': self.admin,
+            'avatar': self.avatar,
+            'active': self.active,
+            'created_at': self.created_at.strftime('%b %d %Y %I:%M%p'),
+            'elo': self.elo,
+            'wins': self.wins,
+            'losses': self.losses
+        }
+
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,3 +66,16 @@ class Game(db.Model):
     winner = db.relationship("User", foreign_keys=[winner_id], backref=sqlalchemy.orm.backref('winners'))
     loser = db.relationship("User", foreign_keys=[loser_id], backref=sqlalchemy.orm.backref('losers'))
     submitted_by = db.relationship("User", foreign_keys=[submitted_by_id], backref=sqlalchemy.orm.backref('submitters'))
+
+    @property
+    def dict(self):
+        return {
+            'id': self.id,
+            'created_at': self.created_at.strftime('%b %d %Y %I:%M%p'),
+            'deleted_at': self.deleted_at.strftime('%b %d %Y %I:%M%p') if self.deleted_at else None,
+            'winner_id': self.winner_id,
+            'winner_elo_score': self.winner_elo_score,
+            'loser_id': self.loser_id,
+            'loser_elo_score': self.loser_elo_score,
+            'submitted_by_id': self.submitted_by_id,
+        }
