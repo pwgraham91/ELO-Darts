@@ -9,7 +9,7 @@ from app.models import User, Game
 
 def pull_user_data(session):
     print 'pulling users'
-    user_data = requests.get(u"{}{}".format(config.base_url, 'export/users'))
+    user_data = requests.get(u"{}{}".format(config.prod_url, 'export/users'))
     loaded_data = json.loads(user_data.text)
     for user_dict in loaded_data:
         user = User(
@@ -31,7 +31,7 @@ def pull_user_data(session):
 
 def pull_game_data(session):
     print 'pulling games'
-    game_data = requests.get(u"{}{}".format(config.base_url, 'export/games'))
+    game_data = requests.get(u"{}{}".format(config.prod_url, 'export/games'))
     loaded_data = json.loads(game_data.text)
     for game_dict in loaded_data:
         game = Game(
@@ -40,6 +40,7 @@ def pull_game_data(session):
             deleted_at=game_dict['deleted_at'],
             winner_id=game_dict['winner_id'],
             winner_elo_score=game_dict['winner_elo_score'],
+            loser_id=game_dict['loser_id'],
             loser_elo_score=game_dict['loser_elo_score'],
             submitted_by_id=game_dict['submitted_by_id']
         )
