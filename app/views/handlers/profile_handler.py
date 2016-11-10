@@ -12,7 +12,8 @@ def get_profile_data(session, user_id):
         or_(
             Game.winner_id == user_id,
             Game.loser_id == user_id
-        )
+        ),
+        Game.deleted_at.is_(None)
     ).order_by(
         Game.created_at.desc()
     ).all()
