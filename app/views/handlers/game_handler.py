@@ -14,8 +14,6 @@ def add_game(session, winner_id, loser_id, submitted_by_id):
     winner_rating, loser_rating = trueskill.rate_1vs1(trueskill.Rating(winner.elo), trueskill.Rating(loser.elo))
     winner_elo, loser_elo = winner_rating.mu, loser_rating.mu
 
-    # verify created at
-
     new_game = Game(
         winner=winner,
         loser=loser,
@@ -27,8 +25,8 @@ def add_game(session, winner_id, loser_id, submitted_by_id):
     winner.elo = winner_elo
     loser.elo = loser_elo
 
-    winner.wins = winner.wins + 1
-    loser.losses = loser.losses + 1
+    winner.wins += 1
+    loser.losses += 1
 
     session.add_all([new_game, winner, loser])
 
