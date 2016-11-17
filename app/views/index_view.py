@@ -1,7 +1,7 @@
 import flask
 from app import app, db
-from app.models import User
 from app.views.handlers.auth_handler import get_google_authorization_url
+from app.views.handlers.user_handler import get_active_users
 
 
 @app.route('/')
@@ -12,7 +12,7 @@ def index():
 
     current_user = flask.g.user
 
-    active_users = session.query(User).all()
+    active_users = get_active_users(session)
 
     return flask.render_template('index.html',
                                  title='Cratejoy Darts',
