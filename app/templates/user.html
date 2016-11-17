@@ -1,42 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section class="section">
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Elo Rating</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{ user.name }}</td>
-            <td>{{ user.elo | round(3, 'common') }}</td>
-        </tr>
-    </tbody>
-</table>
+	<section class="section">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Elo Rating</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{ user.name }}</td>
+					<td>{{ user.elo | round(3, 'common') }}</td>
+				</tr>
+			</tbody>
+		</table>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Opponent</th>
-            <th>Outcome</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Opponent</th>
+					<th>Outcome</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tbody>
 
-        {% for result in results %}
-        <tr>
-            <td><a href="/profile/{{ result.opponent_id }}">{{ result.opponent_name }}</a></td>
-            <td>{{ result.outcome }}</td>
-            <td>{{ result.date }}</td>
-        </tr>
-        {% endfor %}
+				{% for result in results %}
+				<tr>
+					<td><a href="/profile/{{ result.opponent_id }}">{{ result.opponent_name }}</a></td>
+					<td>{{ result.outcome }}</td>
+					<td>{{ result.date }}</td>
+				</tr>
+				{% endfor %}
 
-    </tbody>
-</table>
-</section>
+			</tbody>
+		</table>
+	</section>
 
 {% endblock %}

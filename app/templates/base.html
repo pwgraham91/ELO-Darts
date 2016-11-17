@@ -1,141 +1,128 @@
 <html>
 <head>
-  {% if title %}
-  <title>{{ title }}</title>
-  {% else %}
-  <title>Cratejoy Darts</title>
-  {% endif %}
-  <link href="/static/bulma-0.2.3/css/bulma.css" rel="stylesheet" media="screen">
-  <link href="/static/css/base.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+	{% if title %}
+		<title>{{ title }}</title>
+	{% else %}
+		<title>Cratejoy Darts</title>
+	{% endif %}
+	<link href="/static/bulma-0.2.3/css/bulma.css" rel="stylesheet" media="screen">
+	<link href="/static/css/base.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
-  <script type="text/javascript" src="/static/js/imports/jquery-3.1.0.min.js"></script>
-  {% block head %}{% endblock %}
+	<script type="text/javascript" src="/static/js/imports/jquery-3.1.0.min.js"></script>
+
+	{% block head %}{% endblock %}
 </head>
 
 <body>
-  <section class="hero is-primary">
-    <div class="hero-head">
-      <div class="container">
-        <nav class="nav">
-          <div class="nav-left">
-            {% if g.user.is_authenticated %}
-                <a class="nav-item" href="/profile/{{ g.user.id }}">{{ g.user.name }}</a>
-                <a class="nav-item" href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-                <a class="nav-item" href="{{ auth_url }}">Login With Google</a>
-            {% endif %}
-          </div>
+	<section class="hero is-primary">
+		<div class="hero-head">
+			<div class="container">
+				<nav class="nav">
+					<div class="nav-left">
+						{% if g.user.is_authenticated %}
+							<a class="nav-item" href="/profile/{{ g.user.id }}">{{ g.user.name }}</a>
+							<a class="nav-item" href="{{ url_for('logout') }}">Logout</a>
+						{% else %}
+							<a class="nav-item" href="{{ auth_url }}">Login With Google</a>
+						{% endif %}
+					</div>
 
-          <div class="nav-center">
-            <a class="nav-item" href="https://github.com/pwgraham91/ELO-Darts" target="_blank">
-              <span class="icon">
-                <i class="fa fa-github"></i>
-              </span>
-            </a>
-          </div>
+					<div class="nav-center">
+						<a class="nav-item" href="https://github.com/pwgraham91/ELO-Darts" target="_blank">
+							<span class="icon"><i class="fa fa-github"></i></span>
+						</a>
+					</div>
 
-          <span id="nav-toggle" class="nav-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
+					<div id="nav-menu" class="nav-right nav-menu">
+						<a class="nav-item " href="{{ url_for('index') }}">Rankings</a>
+					</div>
+				</nav>
+			</div>
+		</div>
 
-          <div id="nav-menu" class="nav-right nav-menu">
-            <a class="nav-item " href="{{ url_for('index') }}">Rankings</a>
-          </div>
-        </nav>
-      </div>
-    </div>
+		<div class="hero-body">
+			<div class="container">
+				<div class="columns is-vcentered">
+					<div class="column">
+						<p class="title">Cratejoy Elo Dart Rankings</p>
+						<p class="subtitle">Want to know how we rank? Check out the <a href="http://trueskill.org/" target="_blank">TrueSkill</a> rating system!</p>
+					</div>
+					<div class="column is-narrow">
+						{% if g.user.is_authenticated %}
+							<a class="button is-primary is-inverted is-large modal-button" data-target="#modal">
+								<span class="icon"><i class="fa fa-plus-square"></i></span>
+								<span>Add game</span>
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    <div class="hero-body">
-      <div class="container">
-        <div class="columns is-vcentered">
-          <div class="column">
-            <p class="title">
-              Cratejoy Elo Dart Rankings
-            </p>
-            <p class="subtitle">
-              Want to know how we rank? Check out the <a href="http://trueskill.org/" target="_blank">TrueSkill</a> rating system!
-            </p>
-          </div>
-          <div class="column is-narrow">
-              {% if g.user.is_authenticated %}
-              <a class="button is-primary is-inverted is-large modal-button" data-target="#modal">
-                <span class="icon">
-                  <i class="fa fa-plus-square"></i>
-                </span>
-                <span>Add game</span>
-              </a>
-              {% endif %}
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-  <ul>
-    {% for message in messages %}
-    <li>{{ message }} </li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-  {% endwith %}
-  <div class="container">
-    {% block content %}{% endblock %}
-  </div>
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			<ul>
+				{% for message in messages %}
+					<li>{{ message }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	{% endwith %}
+	<div class="container">
+		{% block content %}{% endblock %}
+	</div>
 
 
-<div class="modal" id="modal">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Add game</p>
-      <button class="delete" id="modal-delete"></button>
-    </header>
-    <section class="modal-card-body">
-        <br>
-        <div class="container has-text-centered">
-            <div class="">
-                <span class="select is-large">
-                    <select class="select-winner is-success">
-                        <option selected="true" disabled="disabled">Select Player</option>
-						<option value="{{ g.user.id }}">{{ g.user.name }}</option>
-                        {% for user in active_users %}
-							{% if user.id != g.user.id %}
-                        		<option value="{{ user.id }}">{{ user.name }}</option>
-							{% endif %}
-                        {% endfor %}
-                    </select>
-                </span>
-            </div>
-            <br>
-            <h1 class="strong">defeated</h1>
-            <br>
-            <div class="">
-                <span class="select is-large">
-                    <select class="select-loser is-danger">
-                        <option selected="true" disabled="disabled">Select Player</option>
-						<option value="{{ g.user.id }}">{{ g.user.name }}</option>
-                        {% for user in active_users %}
-							{% if user.id != g.user.id %}
-                        		<option value="{{ user.id }}">{{ user.name }}</option>
-							{% endif %}
-                        {% endfor %}
-                    </select>
-                </span>
-            </div>
-        </div>
-        <br>
-    </section>
-    <footer class="modal-card-foot">
-      <a class="button is-primary is-medium" id="add-game" disabled="disabled">Submit</a>
-      <a class="button is-medium" id="modal-cancel">Cancel</a>
-    </footer>
-  </div>
-</div>
+	<div class="modal" id="modal">
+		<div class="modal-background"></div>
+		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">Add game</p>
+				<button class="delete" id="modal-delete"></button>
+			</header>
+			<section class="modal-card-body">
+				<br>
+				<div class="container has-text-centered">
+					<div>
+						<span class="select is-large">
+							<select class="select-winner is-success">
+								<option selected="true" disabled="disabled">Select Player</option>
+								<option value="{{ g.user.id }}">{{ g.user.name }}</option>
+								{% for user in active_users %}
+									{% if user.id != g.user.id %}
+										<option value="{{ user.id }}">{{ user.name }}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+						</span>
+					</div>
+					<br>
+					<h1 class="strong">defeated</h1>
+					<br>
+					<div>
+						<span class="select is-large">
+							<select class="select-loser is-danger">
+								<option selected="true" disabled="disabled">Select Player</option>
+								<option value="{{ g.user.id }}">{{ g.user.name }}</option>
+								{% for user in active_users %}
+									{% if user.id != g.user.id %}
+										<option value="{{ user.id }}">{{ user.name }}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+						</span>
+					</div>
+				</div>
+				<br>
+			</section>
+			<footer class="modal-card-foot">
+				<a class="button is-primary is-medium" id="add-game" disabled="disabled">Submit</a>
+				<a class="button is-medium" id="modal-cancel">Cancel</a>
+			</footer>
+		</div>
+	</div>
 </body>
 </html>
 
