@@ -1,29 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section class="section">
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Elo Rating</th>
-      <th>Wins</th>
-      <th>Losses</th>
-    </tr>
-  </thead>
-  <tbody>
-
-    {% for user in active_users | sort(attribute='elo', reverse=True) %}
-    <tr>
-        <td><a href="/profile/{{ user.id }}">{{ user.name }}</a></td>
-        <td>{{ user.elo | round(3, 'common') }}</td>
-        <td>{{ user.wins }}</td>
-        <td>{{ user.losses }}</td>
-    </tr>
-    {% endfor %}
-
-  </tbody>
-</table>
-</section>
+	<section class="section">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Elo Rating</th>
+					<th>Wins</th>
+					<th>Losses</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for user in active_users | sort(attribute='elo', reverse=True) %}
+				<tr>
+					<td><a href="/profile/{{ user.id }}">{{ user.name }}</a></td>
+					<td>{{ user.elo | round(3, 'common') }}</td>
+					<td>{{ user.wins }}</td>
+					<td>{{ user.losses }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</section>
 
 {% endblock %}
