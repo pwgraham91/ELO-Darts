@@ -88,13 +88,7 @@
 					<div>
 						<span class="select is-large">
 							<select class="select-winner is-success">
-								<option selected="true" disabled="disabled">Select Player</option>
-								<option value="{{ g.user.id }}">{{ g.user.name }}</option>
-								{% for user in active_users %}
-									{% if user.id != g.user.id %}
-										<option value="{{ user.id }}">{{ user.name }}</option>
-									{% endif %}
-								{% endfor %}
+								<option value="{{ g.user.id }}" selected>{{ g.user.name }}</option>
 							</select>
 						</span>
 					</div>
@@ -105,7 +99,6 @@
 						<span class="select is-large">
 							<select class="select-loser is-danger">
 								<option selected="true" disabled="disabled">Select Player</option>
-								<option value="{{ g.user.id }}">{{ g.user.name }}</option>
 								{% for user in active_users %}
 									{% if user.id != g.user.id %}
 										<option value="{{ user.id }}">{{ user.name }}</option>
