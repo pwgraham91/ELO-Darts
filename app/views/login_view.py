@@ -11,13 +11,20 @@ from flask_login import logout_user, login_user
 from app import app, db, login_manager
 from app.models import User
 from app.views.handlers.auth_handler import get_google_auth
-from config import Auth
+from config import Auth, ENVIRONMENT
 
 
 @login_manager.user_loader
 def load_user(user_id):
     session = db.session
     return session.query(User).get(user_id)
+
+
+@app.route('/dev-login/<int:user_id>')
+def dev_login(user_id):
+    if ENVIRONMENT == 'dev':
+        login_user(db.session.query(User).get(user_id))
+    return redirect(url_for('index'))
 
 
 @app.route('/logout')
