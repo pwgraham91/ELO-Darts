@@ -1,5 +1,4 @@
-console.log('add game')
-// this isn't hooked up to anything but it works
+console.log('LOADED: add_game.js')
 
 $(document).ready(function() {
 	$('.modal-button').click(function(event) {
@@ -17,7 +16,7 @@ $(document).ready(function() {
 	});
 
 	$('select.select-winner').change(function(event) {
-		val = $('select.select-winner option:selected').val();
+		var val = $('select.select-winner option:selected').val();
 		$('select.select-loser option').removeClass('hidden');
 		$('select.select-loser option[value="' + val + '"]').addClass('hidden');
 
@@ -27,7 +26,7 @@ $(document).ready(function() {
 	});
 
 	$('select.select-loser').change(function(event) {
-		val = $('select.select-loser option:selected').val();
+		var val = $('select.select-loser option:selected').val();
 		$('select.select-winner option').removeClass('hidden');
 		$('select.select-winner option[value="' + val + '"]').addClass('hidden');
 
@@ -51,6 +50,8 @@ $(document).ready(function() {
 				$('select option').removeClass('hidden');
 				$('.modal').removeClass('is-active');
 				$('#add-game').attr('disabled', 'disabled');
+
+				window.location.reload();
 			},
 			error: function (data) {
 				console.log(data);
