@@ -22,6 +22,8 @@
 				<tr>
 					<th>Opponent</th>
 					<th>Outcome</th>
+					<th>Resulting Opponent Score</th>
+					<th>Resulting User Score</th>
 					<th>Date</th>
 				</tr>
 			</thead>
@@ -31,6 +33,8 @@
 				<tr>
 					<td><a href="/profile/{{ result.opponent_id }}">{{ result.opponent_name }}</a></td>
 					<td>{{ result.outcome }}</td>
+					<td>{{ result.resulting_opponent_elo_score | round(3, 'common') }}</td>
+					<td>{{ result.reulting_user_elo_score | round(3, 'common') }}</td>
 					<td>{{ result.date }}</td>
 				</tr>
 				{% endfor %}
@@ -39,4 +43,17 @@
 		</table>
 	</section>
 
+	<section class="section graph">
+		<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+	</section>
+
+{% endblock %}
+
+{% block footer %}
+	<script type="application/javascript">
+		window.userGames = {{ user_games | tojson | safe }};
+		window.userID = {{ user.id }};
+	</script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script type="text/javascript" src="/static/js/graph_user.js"></script>
 {% endblock %}
