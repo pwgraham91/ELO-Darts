@@ -34,8 +34,9 @@
 					<td><a href="/profile/{{ result.opponent_id }}">{{ result.opponent_name }}</a></td>
 					<td>{{ result.outcome }}</td>
 					<td>{{ result.resulting_opponent_elo_score | round(3, 'common') }}</td>
-					<td>{{ result.reulting_user_elo_score | round(3, 'common') }}</td>
+					<td>{{ result.resulting_user_elo_score | round(3, 'common') }}</td>
 					<td>{{ result.date }}</td>
+					<td>{{ now }}</td>
 				</tr>
 				{% endfor %}
 

@@ -1,11 +1,11 @@
 import flask
 import sqlalchemy as sqla
-import datetime
 
 from app import app, db
 from app.models import Game
 from app.views.handlers.auth_handler import get_google_authorization_url
 from app.views.handlers.profile_handler import get_profile_data
+from app.views.handlers.user_handler import get_active_users
 
 
 @app.route('/profile/<int:user_id>')
@@ -28,4 +28,6 @@ def get_profile(user_id):
                                  user=user,
                                  results=results,
                                  auth_url=get_google_authorization_url(),
-                                 user_games=[game.dict for game in user_games])
+                                 user_games=[game.dict for game in user_games],
+                                 active_users=get_active_users(session)  # used in base for 'Add Game'
+                                 )
