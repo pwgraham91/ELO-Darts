@@ -1,6 +1,6 @@
 from sqlalchemy import or_
 
-from app.libs.datetime_lib import convert_to_local_from_utc
+from app.libs.datetime_lib import convert_to_tz_from_utc
 from app.models import User, Game
 
 
@@ -35,14 +35,14 @@ def get_profile_data(session, user_id):
             resulting_user_elo_score = game.loser_elo_score
             resulting_opponent_elo_score = game.winner_elo_score
 
-        game_date = convert_to_local_from_utc(game.created_at).strftime('%m/%d/%Y %I:%M %p')
+        game_date = convert_to_tz_from_utc(game.created_at, 'America/Chicago').strftime('%m/%d/%Y %I:%M %p')
 
         outcomes.append({
             'opponent_name': opponent_name,
             'opponent_id': opponent_id,
             'outcome': outcome,
             'date': game_date,
-            'reulting_user_elo_score': resulting_user_elo_score,
+            'resulting_user_elo_score': resulting_user_elo_score,
             'resulting_opponent_elo_score': resulting_opponent_elo_score,
         })
 
