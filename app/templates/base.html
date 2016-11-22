@@ -12,7 +12,6 @@
 	<script type="text/javascript" src="/static/js/imports/jquery-3.1.0.min.js"></script>
 	<script type="text/javascript" src="/static/js/imports/underscore.js"></script>
 	<script type="text/javascript" src="/static/js/imports/moment.js"></script>
-{#	<script type="text/javascript" src="/static/js/imports/moment-timezone.js"></script>#}
 	<script type="text/javascript" src="/static/js/imports/moment-timezone-with-data-2010-2020.js"></script>
 
 	{% block head %}{% endblock %}
@@ -93,6 +92,11 @@
 						<span class="select is-large">
 							<select class="select-winner is-success">
 								<option value="{{ g.user.id }}" selected>{{ g.user.name }}</option>
+								{% for user in active_users %}
+									{% if user.id != g.user.id %}
+										<option value="{{ user.id }}">{{ user.name }}</option>
+									{% endif %}
+								{% endfor %}
 							</select>
 						</span>
 					</div>

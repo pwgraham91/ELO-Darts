@@ -54,8 +54,9 @@ class User(db.Model):
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
-    created_at = db.Column(db.DateTime, nullable=False, default=sqlalchemy.func.now())
+    created_at = db.Column(db.DateTime, nullable=False)
     deleted_at = db.Column(db.DateTime)
+    slack_user_submitted_by = db.Column(db.String(64))
 
     winner_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
     winner_elo_score = db.Column(db.Float, nullable=False)
