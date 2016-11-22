@@ -12,14 +12,28 @@ $(document).ready(function() {
 		$('select option').removeClass('hidden');
 		$('.modal').removeClass('is-active');
 		$('#add-game').attr('disabled', 'disabled');
-	}
+	};
 
 	$('#modal-cancel, #modal-delete').click(function(event) {
 		event.preventDefault();
 		clearModal();
 	});
 
-	$('select.select-loser').change(function(e) {
+	$('select.select-winner').change(function(event) {
+		var val = $('select.select-winner option:selected').val();
+		$('select.select-loser option').removeClass('hidden');
+		$('select.select-loser option[value="' + val + '"]').addClass('hidden');
+
+		if($('select.select-winner').val() && $('select.select-loser').val()) {
+			$('#add-game').removeAttr('disabled', 'disabled');
+		}
+	});
+
+	$('select.select-loser').change(function(event) {
+		var val = $('select.select-loser option:selected').val();
+		$('select.select-winner option').removeClass('hidden');
+		$('select.select-winner option[value="' + val + '"]').addClass('hidden');
+
 		if($('select.select-winner').val() && $('select.select-loser').val()) {
 			$('#add-game').removeAttr('disabled', 'disabled');
 		}
