@@ -1,15 +1,14 @@
+import datetime
 import trueskill
 
-from app.models import User, Game
+from app.models import Game
 
 
-def add_game(session, winner_id, loser_id, submitted_by_id):
-    if winner_id == loser_id:
+def add_game(session, winner, loser, submitted_by_id=None, slack_user_submitted_by=None):
+    if winner.id == loser.id:
         raise Exception("can't play yourself")
-
-    winner = session.query(User).get(winner_id)
-    loser = session.query(User).get(loser_id)
-    submitted_by = session.query(User).get(submitted_by_id)
+    if not submitted_by_id and not slack_user_submitted_by:
+        raise Exception("who submitted this game?")
 
     winner_rating, loser_rating = trueskill.rate_1vs1(trueskill.Rating(winner.elo), trueskill.Rating(loser.elo))
     winner_elo, loser_elo = winner_rating.mu, loser_rating.mu
@@ -17,9 +16,11 @@ def add_game(session, winner_id, loser_id, submitted_by_id):
     new_game = Game(
         winner=winner,
         loser=loser,
-        submitted_by=submitted_by,
         winner_elo_score=winner_elo,
         loser_elo_score=loser_elo,
+        created_at=datetime.datetime.utcnow(),
+        submitted_by_id=submitted_by_id,
+        slack_user_submitted_by=slack_user_submitted_by
     )
 
     winner.elo = winner_elo
@@ -31,4 +32,3 @@ def add_game(session, winner_id, loser_id, submitted_by_id):
     session.add_all([new_game, winner, loser])
 
     return new_game
-
