@@ -1,0 +1,27 @@
+{
+  "name": "ELO-Darts",
+  "homepage": "https://github.com/pwgraham91/ELO-Darts",
+  "authors": [
+    "Peter Graham <pwgraham91@gmail.com>",
+    "Richard Young <richardy@cratejoy.com>",
+    "Zach Royer <zachary@cratejoy.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "bulma": "^0.2.3",
+    "moment-timezone": "^0.5.9",
+    "underscore": "^1.8.3",
+    "font-awesome": "fontawesome#^4.7.0",
+    "highcharts": "^5.0.4"
+  }
+}
