@@ -6,5 +6,5 @@ app/static/.DS_Store
 .DS_Store
 *.pyc
 node_modules/
-
+app/static/bower_components
 notes.txt
