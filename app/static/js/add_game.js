@@ -1,4 +1,4 @@
-console.log('LOADED: add_game.js')
+console.log('LOADED: add_game.js');
 
 define(['jQuery'], function(
 	jquery

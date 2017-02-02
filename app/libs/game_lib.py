@@ -54,3 +54,34 @@ def decay_users():
 
     print 'ending user decay'
 
+
+def calc_user_current_average(session, user_id, game_id, add_score=None):
+    user_current_winning_game_elo_scores = session.query(sqla.func.array_agg(Game.winner_elo_score)).filter(
+        Game.id <= game_id,
+        Game.winner_id == user_id
+    ).all()
+    user_current_loser_game_elo_scores = session.query(sqla.func.array_agg(Game.loser_elo_score)).filter(
+        Game.id <= game_id,
+        Game.loser_id == user_id
+    ).all()
+
+    # [0][0] to access the nested array of values. if no scores, it will return None so instead set to empty list
+    winner_score_values = user_current_winning_game_elo_scores[0][0] or []
+    loser_score_values = user_current_loser_game_elo_scores[0][0] or []
+
+    combined_scores = winner_score_values + loser_score_values
+    if add_score:
+        combined_scores += add_score
+    return sum(combined_scores) / len(combined_scores)
+
+
+def get_user_most_recent_game(session, user_id):
+    game_id_result = session.query(Game.id).filter(
+        sqla.or_(
+            Game.winner_id == user_id,
+            Game.loser_id == user_id
+        )
+    ).order_by(Game.id.desc()).first()
+
+    if game_id_result:
+        return game_id_result[0]

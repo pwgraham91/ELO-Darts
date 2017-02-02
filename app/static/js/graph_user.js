@@ -16,11 +16,18 @@ define([
 		return moment.utc(game.created_at, "MMM DD YYYY HH:mm A").tz(moment.tz.guess() || 'America/Chicago').format("MM/D/YYYY hh:mm A");
 	});
 	var userID = window.userID;
-	var scores = _.map(window.userGames, function (game) {
+	var eloScores = _.map(window.userGames, function (game) {
 		if (game.winner_id == userID) {
 			return parseFloat(game.winner_elo_score.toFixed(3));
 		} else {
 			return parseFloat(game.loser_elo_score.toFixed(3));
+		}
+	});
+	var averageScores = _.map(window.userGames, function (game) {
+		if (game.winner_id == userID) {
+			return parseFloat(game.winner_average_score.toFixed(3));
+		} else {
+			return parseFloat(game.loser_average_score.toFixed(3));
 		}
 	});
 
@@ -49,9 +56,15 @@ define([
 				}
 			}
 		},
-		series: [{
-			name: 'Score',
-			data: scores
-		}]
+		series: [
+		{
+			name: 'Elo Score',
+			data: eloScores
+		},
+		{
+			name: 'Average Elo Score',
+			data: averageScores
+		}
+	]
 	});
 });

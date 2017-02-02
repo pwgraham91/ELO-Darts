@@ -6,15 +6,17 @@
 			<thead>
 				<tr>
 					<th>Name</th>
+					<th>Average Elo Rating</th>
 					<th>Elo Rating</th>
 					<th>Wins</th>
 					<th>Losses</th>
 				</tr>
 			</thead>
 			<tbody>
-			{% for user in active_users | sort(attribute='elo', reverse=True) %}
+			{% for user in active_users | sort(attribute='average_elo', reverse=True) %}
 				<tr>
 					<td><a href="/profile/{{ user.id }}">{{ user.name }}</a></td>
+					<td>{{ user.average_elo | round(3, 'common') }}</td>
 					<td>{{ user.elo | round(3, 'common') }}</td>
 					<td>{{ user.wins }}</td>
 					<td>{{ user.losses }}</td>
