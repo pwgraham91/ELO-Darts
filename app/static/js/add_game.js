@@ -1,14 +1,16 @@
 console.log('LOADED: add_game.js')
 
-$(document).ready(function() {
+define(['jQuery'], function(
+	jquery
+) {
 	$('.modal-button').click(function(event) {
 		event.preventDefault();
 		$('.modal').addClass('is-active');
 	});
 
 	var clearModal = function() {
-		$('select.select-winner').prop('selectedIndex',0);
-		$('select.select-loser').prop('selectedIndex',0);
+		$('select.select-winner').prop('selectedIndex', 0);
+		$('select.select-loser').prop('selectedIndex', 0);
 		$('select option').removeClass('hidden');
 		$('.modal').removeClass('is-active');
 		$('#add-game').attr('disabled', 'disabled');
