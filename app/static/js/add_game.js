@@ -39,6 +39,8 @@ $(document).ready(function() {
 		}
 	});
 
+	$('select.select-loser option[value="' + window.loggedInUserID + '"]').addClass('hidden');
+
 	$('#add-game').click(function (e) {
 		var $this = jQuery(this);
 		$this.attr('disabled', 'disabled');

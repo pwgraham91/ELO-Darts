@@ -109,9 +109,7 @@
 							<select class="select-loser is-danger">
 								<option selected="true" disabled="disabled">Select Player</option>
 								{% for user in active_users %}
-									{% if user.id != g.user.id %}
-										<option value="{{ user.id }}">{{ user.name }}</option>
-									{% endif %}
+									<option value="{{ user.id }}">{{ user.name }}</option>
 								{% endfor %}
 							</select>
 						</span>
@@ -127,6 +125,12 @@
 	</div>
 </body>
 </html>
+
+<script>
+	{% if g.user.is_authenticated %}
+		window.loggedInUserID = {{ g.user.id }};
+	{% endif %}
+</script>
 
 <script type="text/javascript" src="/static/js/add_game.js"></script>
 {% block footer %}{% endblock %}
