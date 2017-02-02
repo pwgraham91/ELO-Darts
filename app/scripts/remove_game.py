@@ -4,7 +4,7 @@ from sqlalchemy import orm
 import trueskill
 
 import config
-from app.models import Game, User
+from app.models import Game
 
 
 def get_previous_game(session, user, game):

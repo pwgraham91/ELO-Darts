@@ -13,6 +13,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=sqlalchemy.func.now())
 
     elo = db.Column(db.Float, default=100.0)
+    average_elo = db.Column(db.Float, default=100.0)
     wins = db.Column(db.Integer, default=0, nullable=False)
     losses = db.Column(db.Integer, default=0, nullable=False)
 
@@ -47,7 +48,8 @@ class User(db.Model):
             'created_at': self.created_at.strftime('%b %d %Y %I:%M%p'),
             'elo': self.elo,
             'wins': self.wins,
-            'losses': self.losses
+            'losses': self.losses,
+            'average_elo': self.average_elo
         }
 
 
@@ -59,9 +61,15 @@ class Game(db.Model):
     slack_user_submitted_by = db.Column(db.String(64))
 
     winner_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    # new elo score for the winner after the game has been played
     winner_elo_score = db.Column(db.Float, nullable=False)
+    # average score of the winner after the game has been played
+    winner_average_score = db.Column(db.Float)
     loser_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    # new elo score for the loser after the game has been played
     loser_elo_score = db.Column(db.Float, nullable=False)
+    # average score of the loser after the game has been played
+    loser_average_score = db.Column(db.Float)
     submitted_by_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
 
     winner = db.relationship("User", foreign_keys=[winner_id], backref=sqlalchemy.orm.backref('winners'))
@@ -76,7 +84,9 @@ class Game(db.Model):
             'deleted_at': self.deleted_at.strftime('%b %d %Y %I:%M%p') if self.deleted_at else None,
             'winner_id': self.winner_id,
             'winner_elo_score': self.winner_elo_score,
+            'winner_average_score': self.winner_average_score,
             'loser_id': self.loser_id,
             'loser_elo_score': self.loser_elo_score,
+            'loser_average_score': self.loser_average_score,
             'submitted_by_id': self.submitted_by_id,
         }
