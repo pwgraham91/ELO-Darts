@@ -2,15 +2,12 @@
 
 ## Set Up
 
-### Get a virtual environment
-`mkvirtualenv flask_template`
-
-Use `workon` to activate a virtual environment or `deactivate` to leave
-a virtual environment. If this doesn't work, make sure you have 
-virtualenvironment wrapper installed in pip
-
 ### Install requirements
+
+#### Install python requirements
 `pip install -r requirements`
+
+#### Install javascript requirements
 `bower install`
 
 ### Setup database
@@ -26,5 +23,5 @@ Create a new database with `CREATE DATABASE elo_darts`
 ### Create config
 In the root directory, make a file called config.py using example_config.py as a template then replace all of the keys with your own
 
-### Run the app
+## Run the app
 `python run.py`
