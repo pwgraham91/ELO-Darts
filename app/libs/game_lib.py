@@ -56,18 +56,22 @@ def decay_users():
 
 
 def calc_user_current_average(session, user_id, game_id, add_score=None):
-    user_current_winning_game_elo_scores = session.query(sqla.func.array_agg(Game.winner_elo_score)).filter(
-        Game.id <= game_id,
-        Game.winner_id == user_id
-    ).all()
-    user_current_loser_game_elo_scores = session.query(sqla.func.array_agg(Game.loser_elo_score)).filter(
-        Game.id <= game_id,
-        Game.loser_id == user_id
-    ).all()
+    if game_id:
+        user_current_winning_game_elo_scores = session.query(sqla.func.array_agg(Game.winner_elo_score)).filter(
+            Game.id <= game_id,
+            Game.winner_id == user_id
+        ).all()
+        user_current_loser_game_elo_scores = session.query(sqla.func.array_agg(Game.loser_elo_score)).filter(
+            Game.id <= game_id,
+            Game.loser_id == user_id
+        ).all()
 
-    # [0][0] to access the nested array of values. if no scores, it will return None so instead set to empty list
-    winner_score_values = user_current_winning_game_elo_scores[0][0] or []
-    loser_score_values = user_current_loser_game_elo_scores[0][0] or []
+        # [0][0] to access the nested array of values. if no scores, it will return None so instead set to empty list
+        winner_score_values = user_current_winning_game_elo_scores[0][0] or []
+        loser_score_values = user_current_loser_game_elo_scores[0][0] or []
+    else:
+        winner_score_values = []
+        loser_score_values = []
 
     combined_scores = winner_score_values + loser_score_values
     if add_score:
