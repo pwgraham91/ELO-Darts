@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div id="main"></div>
+	<script type="text/javascript" src="/static/js/reactDarts/src/client/public/bundle.js"></script>
+
+{% endblock %}
+
+{% block footer %}
+	<script type="application/javascript">
+		require(['/static/js/index.js']);
+	</script>
+{% endblock %}
