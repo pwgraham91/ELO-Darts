@@ -2,6 +2,9 @@
 {% block content %}
 
 	<div id="main"></div>
+	<script>
+			window.activeUsers = {{ active_users | tojson }};
+	</script>
 	<script type="text/javascript" src="/static/js/reactDarts/src/client/public/bundle.js"></script>
 
 {% endblock %}

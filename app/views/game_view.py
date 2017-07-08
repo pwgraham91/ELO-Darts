@@ -85,13 +85,18 @@ def start_game_post():
 @app.route('/games/play/<string:game_id>')
 @login_required
 def play_game(game_id):
+    """ game id can be 'start' """
+
     session = db.session
-    # game id can be 'start'
     game = session.query(Game).get(game_id)
-    # todo check for game and send error
+
+    active_users = session.query(User.id, User.name).filter(
+        User.active.is_(True)
+    ).all()
 
     return flask.render_template('play_game.html',
                                  title='Cratejoy Darts',
+                                 active_users=active_users,
                                  game=game)
 
 
