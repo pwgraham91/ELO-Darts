@@ -4,7 +4,7 @@ import flask
 from flask.ext.login import login_required
 
 from app import app, db
-from app.models import User
+from app.models import User, Game
 from app.views.handlers.game_handler import add_game
 from config import slack_token
 
@@ -63,3 +63,31 @@ def add_slack_game_post():
     return "{} beat {}! {}'s score is now {} and {}'s score is now {}".format(winner.name, loser.name, winner.name,
                                                                               round(winner.elo, 3), loser.name,
                                                                               round(loser.elo, 3))
+
+
+@app.route('/games/play/start', methods=['POST'])
+@login_required
+def start_game_post():
+    session = db.session
+    # todo make this read from json
+    in_progress_player_1_id = 1
+    in_progress_player_2_id = 2
+    game = Game(
+        in_progress_player_1_id=in_progress_player_1_id,
+        in_progress_player_2_id=in_progress_player_2_id
+    )
+    session.add(game)
+    session.commit()
+    return 'game id and maybe redirect to play game'
+
+
+@app.route('/games/play/<int:game_id>')
+@login_required
+def play_game(game_id):
+    session = db.session
+    game = session.query(Game).get(game_id)
+    # todo check for game and send error
+
+    return flask.render_template('play_game.html',
+                                 title='Cratejoy Darts',
+                                 game=game)
