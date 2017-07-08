@@ -11,3 +11,4 @@ notes.txt
 app/static/js/reactDarts/src/client/public/bundle.js
 app/static/js/reactDarts/README.md
 npm-debug.log
+venv/
