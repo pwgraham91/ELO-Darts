@@ -67,7 +67,7 @@ class Game(db.Model):
 
     winner_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
     # new elo score for the winner after the game has been played
-    winner_elo_score = db.Column(db.Float, nullable=False)
+    winner_elo_score = db.Column(db.Float)
     # average score of the winner after the game has been played
     winner_average_score = db.Column(db.Float)
     loser_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
@@ -95,9 +95,9 @@ class Game(db.Model):
 
 
 class Round(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.BigInteger, primary_key=True)
 
-    game_id = db.Column(db.BigInteger, db.ForeignKey('game.id'))
+    game_id = db.Column(db.BigInteger, db.ForeignKey('game.id'), nullable=False)
     first_throw_player_id = db.Column(db.BigInteger, db.ForeignKey('user.id'))
     round_winner_id = db.Column(db.BigInteger, db.ForeignKey('user.id'))
 
