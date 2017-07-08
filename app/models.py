@@ -60,14 +60,19 @@ class Game(db.Model):
     deleted_at = db.Column(db.DateTime)
     slack_user_submitted_by = db.Column(db.String(64))
 
-    winner_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    score_to_0 = db.Column(db.SmallInteger, nullable=False, default=201)
+    double_out = db.Column(db.Boolean, nullable=False, default=False)
+    rebuttal = db.Column(db.Boolean, nullable=False, default=True)
+    best_of = db.Column(db.Integer, nullable=False, default=3)
+
+    winner_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
     # new elo score for the winner after the game has been played
     winner_elo_score = db.Column(db.Float, nullable=False)
     # average score of the winner after the game has been played
     winner_average_score = db.Column(db.Float)
-    loser_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    loser_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
     # new elo score for the loser after the game has been played
-    loser_elo_score = db.Column(db.Float, nullable=False)
+    loser_elo_score = db.Column(db.Float)
     # average score of the loser after the game has been played
     loser_average_score = db.Column(db.Float)
     submitted_by_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
@@ -75,18 +80,42 @@ class Game(db.Model):
     winner = db.relationship("User", foreign_keys=[winner_id], backref=sqlalchemy.orm.backref('winners'))
     loser = db.relationship("User", foreign_keys=[loser_id], backref=sqlalchemy.orm.backref('losers'))
     submitted_by = db.relationship("User", foreign_keys=[submitted_by_id], backref=sqlalchemy.orm.backref('submitters'))
+    # keep track of who is playing the game
+    in_progress_player_1_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
+    in_progress_player_2_id = db.Column(db.BigInteger, db.ForeignKey('user.id', ondelete="CASCADE"))
+
+    in_progress_player_1 = db.relationship("User", foreign_keys=[in_progress_player_1_id],
+                                           backref=sqlalchemy.orm.backref('in_progress_1'))
+    in_progress_player_2 = db.relationship("User", foreign_keys=[in_progress_player_2_id],
+                                           backref=sqlalchemy.orm.backref('in_progress_2'))
 
     @property
     def dict(self):
-        return {
-            'id': self.id,
-            'created_at': self.created_at.strftime('%b %d %Y %I:%M%p'),
-            'deleted_at': self.deleted_at.strftime('%b %d %Y %I:%M%p') if self.deleted_at else None,
-            'winner_id': self.winner_id,
-            'winner_elo_score': self.winner_elo_score,
-            'winner_average_score': self.winner_average_score,
-            'loser_id': self.loser_id,
-            'loser_elo_score': self.loser_elo_score,
-            'loser_average_score': self.loser_average_score,
-            'submitted_by_id': self.submitted_by_id,
-        }
+        raise Exception('replace this dict with game_lib.game_dict')
+
+
+class Round(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    game_id = db.Column(db.BigInteger, db.ForeignKey('game.id'))
+    first_throw_player_id = db.Column(db.BigInteger, db.ForeignKey('user.id'))
+    round_winner_id = db.Column(db.BigInteger, db.ForeignKey('user.id'))
+
+    game = db.relationship("Game", backref="game_rounds")
+    first_throw_player = db.relationship("User", foreign_keys=[first_throw_player_id],
+                                         backref=sqlalchemy.orm.backref('first_throw_players'))
+    round_winner = db.relationship("User", foreign_keys=[round_winner_id],
+                                   backref=sqlalchemy.orm.backref('round_winner'))
+
+
+class Throw(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    hit_score = db.Column(db.Integer, nullable=False)
+    hit_area = db.Column(db.String(3), nullable=False)
+
+    round_id = db.Column(db.Integer, db.ForeignKey('round.id'), nullable=False)
+    player_id = db.Column(db.BigInteger, db.ForeignKey('user.id'))
+
+    player = db.relationship("User", backref="player_throws")
+    round = db.relationship("Round", backref="round_throws")
