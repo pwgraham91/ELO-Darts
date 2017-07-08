@@ -81,10 +81,11 @@ def start_game_post():
     return 'game id and maybe redirect to play game'
 
 
-@app.route('/games/play/<int:game_id>')
+@app.route('/games/play/<string:game_id>')
 @login_required
 def play_game(game_id):
     session = db.session
+    # game id can be 'start'
     game = session.query(Game).get(game_id)
     # todo check for game and send error
 
