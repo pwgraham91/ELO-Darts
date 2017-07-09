@@ -120,11 +120,12 @@ def game_dict(session, game):
         throw_round = []
 
         for counter, throw in enumerate(throws):
-            if (counter + 1) % 3 == 0:
+            if ((counter + 1) % 3 == 0) and counter != 0:
+                throw_round.append(throw.hit_score)
                 throws_group.append(throw_round)
                 throw_round = []
             else:
-                throw_round.append(throw)
+                throw_round.append(throw.hit_score)
 
         return throws_group
 
@@ -142,7 +143,7 @@ def game_dict(session, game):
         # get throws and add to round_dict
         player_1_throws = session.query(Throw).filter(
             Throw.round_id == _round.id,
-            Throw.in_progress_player_1_id == game.in_progress_player_1_id
+            Throw.player_id == game.in_progress_player_1_id
         ).all()
 
         player_1_throws_list = group_throws(player_1_throws)
@@ -150,7 +151,7 @@ def game_dict(session, game):
 
         player_2_throws = session.query(Throw).filter(
             Throw.round_id == _round.id,
-            Throw.in_progress_player_2_id == game.in_progress_player_2_id
+            Throw.player_id == game.in_progress_player_2_id
         ).all()
 
         player_2_throws_list = group_throws(player_2_throws)
