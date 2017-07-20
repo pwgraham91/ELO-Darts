@@ -1,6 +1,7 @@
 alembic==0.8.7
 Babel==2.3.4
 blinker==1.4
+bugsnag==3.1.1
 click==6.6
 coverage==4.2
 decorator==4.0.10
@@ -33,9 +34,10 @@ six==1.10.0
 SQLAlchemy==1.0.14
 sqlalchemy-migrate==0.10.0
 sqlparse==0.2.1
-tzlocal==1.1.2
 Tempita==0.5.2
 trueskill==0.4.4
+tzlocal==1.1.2
+WebOb==1.7.3
 Werkzeug==0.11.10
 Whoosh==2.7.4
 WTForms==2.1
