@@ -89,10 +89,6 @@ class Game(db.Model):
     in_progress_player_2 = db.relationship("User", foreign_keys=[in_progress_player_2_id],
                                            backref=sqlalchemy.orm.backref('in_progress_2'))
 
-    @property
-    def dict(self):
-        raise Exception('replace this dict with game_lib.game_dict')
-
 
 class Round(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
