@@ -35,13 +35,12 @@ def get_profile_data(session, user_id):
             resulting_user_elo_score = game.loser_elo_score
             resulting_opponent_elo_score = game.winner_elo_score
 
-        game_date = convert_to_tz_from_utc(game.created_at, 'America/Chicago').strftime('%m/%d/%Y %I:%M %p')
-
         outcomes.append({
+            'id': game.id,
             'opponent_name': opponent_name,
             'opponent_id': opponent_id,
             'outcome': outcome,
-            'date': game_date,
+            'date': convert_to_tz_from_utc(game.created_at, 'America/Chicago').strftime('%m/%d/%Y %I:%M %p'),
             'resulting_user_elo_score': resulting_user_elo_score,
             'resulting_opponent_elo_score': resulting_opponent_elo_score,
         })

@@ -1,9 +1,7 @@
 import datetime
 import sqlalchemy as sqla
-from sqlalchemy import orm
 import trueskill
 
-import config
 from app.models import Game
 
 
@@ -74,7 +72,7 @@ def replay_game(session, next_game, affected_player_ids):
     return winner, loser
 
 
-def run_next_game(next_game_ids, affected_player_ids, updated_games_ids):
+def run_next_game(session, next_game_ids, affected_player_ids, updated_games_ids):
     if len(next_game_ids):
         next_game_id = min(next_game_ids)
         next_game = session.query(Game).get(next_game_id)
@@ -89,15 +87,14 @@ def run_next_game(next_game_ids, affected_player_ids, updated_games_ids):
         if next_loser_game:
             next_game_ids.add(next_loser_game.id)
 
-        run_next_game(next_game_ids, affected_player_ids, updated_games_ids)
+        run_next_game(session, next_game_ids, affected_player_ids, updated_games_ids)
 
 
-def remove_game(session, game_id):
+def remove_game(session, game):
     affected_player_ids = set()
     updated_games_ids = set()
     next_game_ids = set()
 
-    game = session.query(Game).get(game_id)
     game.deleted_at = datetime.datetime.utcnow()
     session.add(game)
 
@@ -123,16 +120,8 @@ def remove_game(session, game_id):
     if next_loser_game:
         next_game_ids.add(next_loser_game.id)
 
-    run_next_game(next_game_ids, affected_player_ids, updated_games_ids)
+    run_next_game(session, next_game_ids, affected_player_ids, updated_games_ids)
 
-
-if __name__ == '__main__':
-    engine = sqla.create_engine(config.SQLALCHEMY_DATABASE_URI, echo=True)
-    Session = orm.sessionmaker(bind=engine)
-    session = Session()
-
-    # change me
-    game_id = None
-
-    remove_game(session, game_id)
     session.commit()
+
+    return affected_player_ids, updated_games_ids
