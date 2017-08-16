@@ -4,6 +4,7 @@ import flask
 from flask.ext.login import login_required
 
 from app import app, db
+from app.libs.remove_game_lib import remove_game
 from app.models import User, Game
 from app.views.handlers.game_handler import add_game
 from config import slack_token
@@ -92,3 +93,34 @@ def play_game(game_id):
     return flask.render_template('play_game.html',
                                  title='Cratejoy Darts',
                                  game=game)
+
+
+@app.route('/games/remove/<int:game_id>', methods=['DELETE'])
+@login_required
+def remove_game_get(game_id):
+    session = db.session
+
+    current_user = flask.g.user
+    if not current_user.admin:
+        return flask.Response(json.dumps({
+            'success': False,
+            'message': 'Access Denied',
+            'affected_player_ids': [],
+            'updated_game_ids': []
+        }), mimetype=u'application/json')
+
+    game = session.query(Game).get(game_id)
+    if not game:
+        return flask.Response(json.dumps({
+            'success': False,
+            'message': 'No Such Game',
+            'affected_player_ids': [],
+            'updated_game_ids': []
+        }), mimetype=u'application/json')
+
+    affected_player_ids, updated_game_ids = remove_game(session, game)
+
+    return flask.Response(json.dumps({
+        'affected_player_ids': list(affected_player_ids),
+        'updated_game_ids': list(updated_game_ids)
+    }), mimetype=u'application/json')

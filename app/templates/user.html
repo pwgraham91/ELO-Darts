@@ -25,6 +25,7 @@
 					<th>Resulting Opponent Score</th>
 					<th>Resulting User Score</th>
 					<th>Date</th>
+					{% if g.user.admin %}<th>Remove</th>{% endif %}
 				</tr>
 			</thead>
 			<tbody>
@@ -36,7 +37,11 @@
 					<td>{{ result.resulting_opponent_elo_score | round(3, 'common') }}</td>
 					<td>{{ result.resulting_user_elo_score | round(3, 'common') }}</td>
 					<td>{{ result.date }}</td>
-					<td>{{ now }}</td>
+					{% if g.user.admin %}
+						<td>
+							<a href="#" class="remove-game" data-game-id="{{ result.id }}">X</a>
+						</td>
+					{% endif %}
 				</tr>
 				{% endfor %}
 
@@ -55,6 +60,6 @@
 		window.userGames = {{ user_games | tojson | safe }};
 		window.userID = {{ user.id }};
 
-		require(['/static/js/graph_user.js']);
+		require(['/static/js/graph_user.js', '/static/js/user_view.js']);
 	</script>
 {% endblock %}
