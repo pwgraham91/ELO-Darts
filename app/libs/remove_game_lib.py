@@ -23,13 +23,16 @@ def get_score_from_game(user, game):
     return game.winner_elo_score if user.id == game.winner_id else game.loser_elo_score
 
 
-def get_next_game(session, user_id, last_game_id, updated_games_ids):
+def get_next_game(session, user_id, last_game, updated_games_ids):
+    if not last_game:
+        return
+
     return session.query(Game).filter(
         sqla.or_(
             Game.winner_id == user_id,
             Game.loser_id == user_id
         ),
-        Game.id > last_game_id,
+        Game.id > last_game.id,
         Game.id.notin_(updated_games_ids),
         Game.deleted_at.is_(None)
     ).first()
@@ -112,11 +115,11 @@ def remove_game(session, game):
     session.add(loser)
     affected_player_ids.add(loser.id)
 
-    next_winner_game = get_next_game(session, winner.id, winner_previous_game.id, updated_games_ids)
+    next_winner_game = get_next_game(session, winner.id, winner_previous_game, updated_games_ids)
     if next_winner_game:
         next_game_ids.add(next_winner_game.id)
 
-    next_loser_game = get_next_game(session, loser.id, loser_previous_game.id, updated_games_ids)
+    next_loser_game = get_next_game(session, loser.id, loser_previous_game, updated_games_ids)
     if next_loser_game:
         next_game_ids.add(next_loser_game.id)
 
