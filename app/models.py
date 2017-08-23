@@ -54,6 +54,7 @@ class User(db.Model):
 
 
 class Game(db.Model):
+    """ A `Game` is a whole match """
     id = db.Column(db.Integer, primary_key=True)
 
     created_at = db.Column(db.DateTime, nullable=False, default=sqlalchemy.func.now())
@@ -91,6 +92,10 @@ class Game(db.Model):
 
 
 class Round(db.Model):
+    """ a `Round` is a single game in a match. For example, if you're playing a 201 best out of 3, the 3 games are
+        considered `Round`s and the whole match is a `Game`
+    """
+
     id = db.Column(db.BigInteger, primary_key=True)
 
     game_id = db.Column(db.BigInteger, db.ForeignKey('game.id'), nullable=False)

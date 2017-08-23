@@ -91,10 +91,28 @@ def get_user_most_recent_game(session, user_id):
         return game_id_result[0]
 
 
+def group_throws(throws):
+    throws_group = []
+    throw_round = []
+
+    for counter, throw in enumerate(throws):
+        if ((counter + 1) % 3 == 0) and counter != 0:
+            throw_round.append(throw.hit_score)
+            throws_group.append(throw_round)
+            throw_round = []
+        else:
+            throw_round.append(throw.hit_score)
+
+    if len(throw_round) > 0:
+        throws_group.append(throw_round)
+
+    return throws_group
+
+
 def game_dict(session, game):
     g_dict = {
         'id': game.id,
-        'created_at': game.created_at.strftime('%b %d %Y %I:%M%p'),
+        'created_at': game.created_at.strftime('%b %d %Y %I:%M%p') if game.created_at else None,
         'deleted_at': game.deleted_at.strftime('%b %d %Y %I:%M%p') if game.deleted_at else None,
         'score_to_0': game.score_to_0,
         'double_out': game.double_out,
@@ -115,20 +133,6 @@ def game_dict(session, game):
         Round.game_id == game.id
     ).all()
 
-    def group_throws(throws):
-        throws_group = []
-        throw_round = []
-
-        for counter, throw in enumerate(throws):
-            if ((counter + 1) % 3 == 0) and counter != 0:
-                throw_round.append(throw.hit_score)
-                throws_group.append(throw_round)
-                throw_round = []
-            else:
-                throw_round.append(throw.hit_score)
-
-        return throws_group
-
     rounds = []
     for _round in round_objects:
 
@@ -146,16 +150,14 @@ def game_dict(session, game):
             Throw.player_id == game.in_progress_player_1_id
         ).all()
 
-        player_1_throws_list = group_throws(player_1_throws)
-        round_dict['player_1_throws'] = player_1_throws_list
+        round_dict['player_1_throws'] = group_throws(player_1_throws)
 
         player_2_throws = session.query(Throw).filter(
             Throw.round_id == _round.id,
             Throw.player_id == game.in_progress_player_2_id
         ).all()
 
-        player_2_throws_list = group_throws(player_2_throws)
-        round_dict['player_2_throws'] = player_2_throws_list
+        round_dict['player_2_throws'] = group_throws(player_2_throws)
 
         rounds.append(round_dict)
 
