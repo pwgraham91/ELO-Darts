@@ -66,20 +66,23 @@ def add_slack_game_post():
                                                                               round(loser.elo, 3))
 
 
-@app.route('/games/play/start', methods=['POST'])
+@app.route('/games/start/', methods=['POST'])
 @login_required
 def start_game_post():
     session = db.session
-    # todo make this read from json
-    in_progress_player_1_id = 1
-    in_progress_player_2_id = 2
     game = Game(
-        in_progress_player_1_id=in_progress_player_1_id,
-        in_progress_player_2_id=in_progress_player_2_id
+        in_progress_player_1_id=flask.g.user.id,
+        in_progress_player_2_id=int(flask.request.json['player_2_id']),
+        score_to_0=int(flask.request.json['score_to_0']),
+        double_out=flask.request.json['double_out'] == 'on',
+        rebuttal=flask.request.json['rebuttal'] == 'on',
+        best_of=int(flask.request.json['best_of'])
     )
     session.add(game)
     session.commit()
-    return 'game id and maybe redirect to play game'
+    return flask.Response(json.dumps({
+        'game_id': game.id,
+    }), mimetype=u'application/json')
 
 
 @app.route('/games/play/<string:game_id>')
@@ -88,16 +91,18 @@ def play_game(game_id):
     """ game id can be 'start' """
 
     session = db.session
-    game = session.query(Game).get(game_id)
-
-    active_users = session.query(User.id, User.name).filter(
-        User.active.is_(True)
-    ).all()
-
-    return flask.render_template('play_game.html',
-                                 title='Cratejoy Darts',
-                                 active_users=active_users,
-                                 game=game)
+    if game_id == 'start':
+        active_users = session.query(User.id, User.name).filter(
+            User.active.is_(True)
+        ).all()
+        return flask.render_template('play_game.html',
+                                     title='Cratejoy Darts',
+                                     active_users=active_users)
+    else:
+        game = session.query(Game).get(game_id)
+        return flask.render_template('play_game.html',
+                                     title='Cratejoy Darts',
+                                     game=game)
 
 
 @app.route('/games/remove/<int:game_id>', methods=['DELETE'])

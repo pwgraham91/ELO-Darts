@@ -12,7 +12,6 @@ const defaultState = {
 
 const store = createStore(rootReducer, defaultState);
 
-// todo probably don't need history here
 export const history = syncHistoryWithStore(browserHistory, store);
 
 if(module.hot) {

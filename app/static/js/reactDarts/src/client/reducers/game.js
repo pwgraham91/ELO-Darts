@@ -1,6 +1,5 @@
 function game(state = [], action) {
 	console.log('game reducer')
-	return state;
 	switch(action.type) {
 		case 'INCREMENT_LIKES' :
 			console.log("Incrementing Likes!!");

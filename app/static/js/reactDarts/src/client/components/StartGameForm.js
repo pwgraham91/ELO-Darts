@@ -4,7 +4,7 @@ const StartGameForm = React.createClass({
 	handleSubmit(e) {
 		e.preventDefault();
 
-		fetch('/games/play/start',
+		fetch('/games/start/',
 			{
 				method: 'POST',
 				body: JSON.stringify({
@@ -16,11 +16,18 @@ const StartGameForm = React.createClass({
 				}),
 				credentials: 'include',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
 				}
 			}
 		).then(function (response) {
-			console.log(response);
+			return response.json()
+		}).then(function (response) {
+			if (response.game_id) {
+				window.location.href = '/games/play/' + response.game_id
+			} else {
+				console.log(response)
+			}
 		}).catch(function (response) {
 			console.log('error!');
 			console.log(response);
