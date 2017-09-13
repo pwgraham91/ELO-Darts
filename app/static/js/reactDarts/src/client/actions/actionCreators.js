@@ -1,7 +1,7 @@
 // increment
-export function increment(index) {
+export function throwOne(player_id) {
 	return {
-		type: 'INCREMENT_LIKES',
-		index
+		type: 'THROW_ONE',
+		player_id
 	}
 }

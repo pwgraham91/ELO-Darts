@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block uncontained_content %}
+{% block content %}
 
 	<div id="main"></div>
 	<script>
-		window.game = {{ game | tojson }};
+		window.activeUsers = {{ active_users | tojson }};
 	</script>
 	<script type="text/javascript" src="/static/js/reactDarts/src/client/public/bundle.js"></script>
 

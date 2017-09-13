@@ -1,14 +1,28 @@
 function game(state = [], action) {
-	console.log('game reducer')
+
 	switch(action.type) {
-		case 'INCREMENT_LIKES' :
-			console.log("Incrementing Likes!!");
-			const i = action.index;
-			return [
-				...state.slice(0,i), // before the one we are updating
-				{...state[i], likes: state[i].likes + 1},
-				...state.slice(i + 1), // after the one we are updating
-			]
+		case 'THROW_ONE' :
+			const clonedState = Object.assign({}, state);
+			clonedState.game_rounds.push({
+				game_id: state.id,
+				first_throw_player_id: action.player_id,
+				player_1_throws: [],
+				player_2_throws: []
+			});
+
+			fetch('/games/throw_one/',
+				{
+					method: 'POST',
+					body: JSON.stringify(state),
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+						'Accept': 'application/json'
+					}
+				}
+			);
+
+			return clonedState;
 		default:
 			return state;
 	}

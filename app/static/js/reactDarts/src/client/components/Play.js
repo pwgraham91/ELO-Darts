@@ -1,16 +1,34 @@
 import React from 'react';
+import ThrowOneModal from './ThrowOneModal';
 
-class Play extends React.Component {
+const Play = React.createClass({
+	throwOneOrPlayRender() {
+		if (this.props.game.game_rounds.length === 0 || !this.props.game.game_rounds[this.props.game.game_rounds.length - 1].first_throw_player_id) {
+			return (
+				<ThrowOneModal {...this.props} />
+			)
+		} else {
+			return (
+				// todo make these their own classes
+				<div className="wrapper">
+					<div className="scoreboard">Scoreboard</div>
+					<div className="dartboard">Dartboard</div>
+				</div>
+			)
+		}
+	},
+
 	render() {
 		return (
-			<header>
-				<h1>
-					Play
-				</h1>
-				<a href="#" onClick={this.props.increment.bind(null, 123, 456)}>Click (this is an example of hitting the state)</a>
-			</header>
+			<div className="game-container" style={
+				{
+					display: 'flex'
+				}
+			}>
+				{this.throwOneOrPlayRender()}
+			</div>
 		)
 	}
-};
+});
 
 export default Play;

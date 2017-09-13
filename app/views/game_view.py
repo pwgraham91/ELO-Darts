@@ -4,8 +4,9 @@ import flask
 from flask.ext.login import login_required
 
 from app import app, db
+from app.libs import game_lib
 from app.libs.remove_game_lib import remove_game
-from app.models import User, Game
+from app.models import User, Game, Round
 from app.views.handlers.game_handler import add_game
 from config import slack_token
 
@@ -85,24 +86,31 @@ def start_game_post():
     }), mimetype=u'application/json')
 
 
-@app.route('/games/play/<string:game_id>')
+@app.route('/games/play/start')
+@login_required
+def start_game():
+    session = db.session
+    active_users = session.query(User.id, User.name).filter(
+        User.active.is_(True)
+    ).all()
+    return flask.render_template('start_game.html',
+                                 title='Cratejoy Darts',
+                                 active_users=active_users)
+
+
+@app.route('/games/play/<int:game_id>')
 @login_required
 def play_game(game_id):
-    """ game id can be 'start' """
-
     session = db.session
-    if game_id == 'start':
-        active_users = session.query(User.id, User.name).filter(
-            User.active.is_(True)
-        ).all()
-        return flask.render_template('play_game.html',
-                                     title='Cratejoy Darts',
-                                     active_users=active_users)
-    else:
-        game = session.query(Game).get(game_id)
-        return flask.render_template('play_game.html',
-                                     title='Cratejoy Darts',
-                                     game=game)
+    game = session.query(Game).filter(
+        Game.id == game_id,
+        Game.winner_id.is_(None)
+    ).first()
+    if not game:
+        return 'No In Progress Game Found'
+    return flask.render_template('play_game.html',
+                                 title='Cratejoy Darts',
+                                 game=game_lib.game_dict(session, game))
 
 
 @app.route('/games/remove/<int:game_id>', methods=['DELETE'])
@@ -134,3 +142,19 @@ def remove_game_get(game_id):
         'affected_player_ids': list(affected_player_ids),
         'updated_game_ids': list(updated_game_ids)
     }), mimetype=u'application/json')
+
+
+@app.route('/games/throw_one/', methods=['POST'])
+@login_required
+def throw_one():
+    session = db.session
+
+    added_round = flask.request.json['game_rounds'][-1]
+    new_round = Round(
+        game_id=flask.request.json['id'],
+        first_throw_player_id=added_round['first_throw_player_id']
+    )
+    session.add(new_round)
+    session.commit()
+
+    return flask.Response(json.dumps(game_lib.game_dict(session, new_round.game)), mimetype=u'application/json')

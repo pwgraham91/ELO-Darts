@@ -7,9 +7,7 @@ import Main from '../components/Main';
 import './App.css';
 
 function mapStateToProps(state) {
-	return {
-		game: state.games
-	}
+	return state
 }
 
 function mapDispatchToProps(dispatch) {

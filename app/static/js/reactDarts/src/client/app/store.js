@@ -7,7 +7,7 @@ import rootReducer from '../reducers/index';
 
 // create an object for the default data
 const defaultState = {
-	game: null
+	game: window.game || null
 };
 
 const store = createStore(rootReducer, defaultState);
