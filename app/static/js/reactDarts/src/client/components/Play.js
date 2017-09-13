@@ -1,5 +1,8 @@
 import React from 'react';
+
 import ThrowOneModal from './ThrowOneModal';
+import Scoreboard from './Scoreboard';
+import Dartboard from './Dartboard';
 
 const Play = React.createClass({
 	throwOneOrPlayRender() {
@@ -9,10 +12,11 @@ const Play = React.createClass({
 			)
 		} else {
 			return (
-				// todo make these their own classes
-				<div className="wrapper">
-					<div className="scoreboard">Scoreboard</div>
-					<div className="dartboard">Dartboard</div>
+				<div style={{
+					display: 'flex'
+				}}>
+					<Scoreboard {...this.props} />
+					<Dartboard {...this.props} />
 				</div>
 			)
 		}
@@ -20,11 +24,7 @@ const Play = React.createClass({
 
 	render() {
 		return (
-			<div className="game-container" style={
-				{
-					display: 'flex'
-				}
-			}>
+			<div className="game-container">
 				{this.throwOneOrPlayRender()}
 			</div>
 		)

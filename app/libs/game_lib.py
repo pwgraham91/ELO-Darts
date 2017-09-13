@@ -141,7 +141,8 @@ def game_dict(session, game):
             'game_id': _round.game_id,
             'first_throw_player_id': _round.first_throw_player_id,
             'in_progress_player_1_id': game.in_progress_player_1_id,
-            'in_progress_player_2_id': game.in_progress_player_2_id
+            'in_progress_player_2_id': game.in_progress_player_2_id,
+            'round_winner': _round.round_winner
         }
 
         # get throws and add to round_dict
