@@ -101,7 +101,7 @@ def group_throws(throws):
             throws_group.append(throw_round)
             throw_round = []
         else:
-            throw_round.append(throw.hit_score)
+            throw_round.append(throw.dict)
 
     if len(throw_round) > 0:
         throws_group.append(throw_round)
@@ -131,7 +131,7 @@ def game_dict(session, game):
 
     round_objects = session.query(Round).filter(
         Round.game_id == game.id
-    ).all()
+    ).order_by(Round.id.asc()).all()
 
     rounds = []
     for _round in round_objects:
@@ -149,14 +149,14 @@ def game_dict(session, game):
         player_1_throws = session.query(Throw).filter(
             Throw.round_id == _round.id,
             Throw.player_id == game.in_progress_player_1_id
-        ).all()
+        ).order_by(Throw.id.asc()).all()
 
         round_dict['player_1_throws'] = group_throws(player_1_throws)
 
         player_2_throws = session.query(Throw).filter(
             Throw.round_id == _round.id,
             Throw.player_id == game.in_progress_player_2_id
-        ).all()
+        ).order_by(Throw.id.asc()).all()
 
         round_dict['player_2_throws'] = group_throws(player_2_throws)
 

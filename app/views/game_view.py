@@ -1,12 +1,12 @@
-import json
-
 import flask
 from flask.ext.login import login_required
+import json
+import sqlalchemy
 
 from app import app, db
 from app.libs import game_lib
 from app.libs.remove_game_lib import remove_game
-from app.models import User, Game, Round
+from app.models import User, Game, Round, Throw
 from app.views.handlers.game_handler import add_game
 from config import slack_token
 
@@ -158,3 +158,30 @@ def throw_one():
     session.commit()
 
     return flask.Response(json.dumps(game_lib.game_dict(session, new_round.game)), mimetype=u'application/json')
+
+
+@app.route('/games/throw_dart/', methods=['POST'])
+@login_required
+def throw_dart():
+    session = db.session
+    round_id = session.query(Round.id).join(
+        Game,
+        sqlalchemy.and_(
+            Round.game_id == Game.id,
+            Game.id == int(flask.request.json['game_id'])
+        )
+    ).filter(
+        Round.round_winner_id.is_(None)
+    ).scalar()
+
+    new_throw = Throw(
+        hit_score=int(flask.request.json['hit_score']),
+        hit_area=flask.request.json['hit_area'],
+        points_left_before_throw=int(flask.request.json['points_left_before_throw']),
+        player_id=int(flask.request.json['player_id']),
+        round_id=round_id
+    )
+    session.add(new_throw)
+    session.commit()
+
+    return flask.Response(json.dumps(game_lib.game_dict(session, new_throw.round.game)), mimetype=u'application/json')

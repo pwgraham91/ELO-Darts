@@ -114,6 +114,7 @@ class Throw(db.Model):
 
     hit_score = db.Column(db.Integer, nullable=False)
     hit_area = db.Column(db.String(3), nullable=False)
+    points_left_before_throw = db.Column(db.Integer, nullable=False)
 
     round_id = db.Column(db.Integer, db.ForeignKey('round.id'), nullable=False)
     player_id = db.Column(db.BigInteger, db.ForeignKey('user.id'))
@@ -121,5 +122,13 @@ class Throw(db.Model):
     player = db.relationship("User", backref="player_throws")
     round = db.relationship("Round", backref="round_throws")
 
-    # todo we could put `points_left` here. That way, we don't have to recalc every time and we can easily get good
-    # analytics
+    @property
+    def dict(self):
+        return {
+            'id': self.id,
+            'hit_score': self.hit_score,
+            'hit_area': self.hit_area,
+            'points_left_before_throw': self.points_left_before_throw,
+            'round_id': self.round_id,
+            'player_id': self.player_id,
+        }

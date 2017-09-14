@@ -2,10 +2,17 @@ import { createStore } from 'redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 
-// import the root reducer
 import rootReducer from '../reducers/index';
+import funcs from '../handlers';
 
 // create an object for the default data
+var game;
+if (window.game) {
+	game = window.game;
+	game.current_thrower_player_1 = funcs.determineThrower(game);
+} else {
+	game = null;
+}
 const defaultState = {
 	game: window.game || null
 };
