@@ -120,3 +120,6 @@ class Throw(db.Model):
 
     player = db.relationship("User", backref="player_throws")
     round = db.relationship("Round", backref="round_throws")
+
+    # todo we could put `points_left` here. That way, we don't have to recalc every time and we can easily get good
+    # analytics

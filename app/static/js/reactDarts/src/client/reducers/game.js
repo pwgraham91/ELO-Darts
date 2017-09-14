@@ -1,8 +1,8 @@
 function game(state = [], action) {
 
 	switch(action.type) {
-		case 'THROW_ONE' :
-			const clonedState = Object.assign({}, state);
+		case 'THROW_ONE':
+			var clonedState = Object.assign({}, state);
 			clonedState.game_rounds.push({
 				game_id: state.id,
 				first_throw_player_id: action.player_id,
@@ -23,6 +23,13 @@ function game(state = [], action) {
 			);
 
 			return clonedState;
+		case 'THROW_DART':
+			debugger
+			// figure out who threw the dart and log it and post it
+			var clonedState = Object.assign({}, state);
+
+
+
 		default:
 			return state;
 	}
