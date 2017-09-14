@@ -5,7 +5,6 @@ function game(state = [], action) {
 	switch(action.type) {
 		case 'THROW_ONE':
 			var clonedState = Object.assign({}, state);
-			clonedState.current_thrower_player_1 = action.player_id === clonedState.in_progress_player_1_id;
 			clonedState.game_rounds.push({
 				game_id: state.id,
 				first_throw_player_id: action.player_id,
@@ -31,7 +30,10 @@ function game(state = [], action) {
 			var clonedState = Object.assign({}, state);
 			var points_left_before_throw, throws, player_id;
 
-			if (clonedState.current_thrower_player_1) {
+			var throwerDict = funcs.determineThrower(clonedState);
+			var current_thrower_player_1 = throwerDict.player1;
+
+			if (current_thrower_player_1) {
 				points_left_before_throw = funcs.getPlayerScore(clonedState, true);
 				throws = clonedState.game_rounds[clonedState.game_rounds.length - 1].player_1_throws;
 				player_id = clonedState.in_progress_player_1.id;
@@ -53,7 +55,13 @@ function game(state = [], action) {
 				throws.push([_throw]);
 			}
 
-			clonedState.current_thrower_player_1 = funcs.determineThrower(clonedState);
+			// check for winner
+			var throwerDict = funcs.determineThrower(clonedState);
+
+			if (throwerDict.winnerId) {
+				// todo: pass round winner to the POST
+				// todo: start new round or finish game
+			}
 
 			fetch('/games/throw_dart/',
 				{
@@ -74,7 +82,7 @@ function game(state = [], action) {
 			return clonedState;
 
 		case 'UNDO_THROW_DART':
-			// todo
+			// todo undo state and send request to undo last dart from this game
 			return state;
 
 		default:
