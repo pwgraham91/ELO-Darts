@@ -33,14 +33,22 @@ function game(state = [], action) {
 			var throwerDict = funcs.determineThrower(clonedState);
 			var current_thrower_player_1 = throwerDict.player1;
 
-			if (current_thrower_player_1) {
+			if (current_thrower_player_1 === true) {
 				points_left_before_throw = funcs.getPlayerScore(clonedState, true);
 				throws = clonedState.game_rounds[clonedState.game_rounds.length - 1].player_1_throws;
 				player_id = clonedState.in_progress_player_1.id;
-			} else {
+			} else if (current_thrower_player_1 === false) {
 				points_left_before_throw = funcs.getPlayerScore(clonedState, false);
 				throws = clonedState.game_rounds[clonedState.game_rounds.length - 1].player_2_throws;
 				player_id = clonedState.in_progress_player_2.id;
+			} else {
+				// no one is throwing
+				if (throwerDict.winnerId) {
+					console.log(throwerDict.winnerId)
+					console.log('should not have thrown that')
+					// we should not have been throwing. this should have been handled below
+					return state;
+				}
 			}
 			var _throw = {
 				hit_score: action.score,

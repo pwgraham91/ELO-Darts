@@ -1,5 +1,9 @@
 function getPlayerScore(game, player1) {
-	const currentRound = game.game_rounds[game.game_rounds.length -1];
+	if (game.game_rounds.length === 0) {
+		return game.score_to_0
+	}
+
+	const currentRound = game.game_rounds[game.game_rounds.length - 1];
 
 	const throws = player1 ? currentRound.player_1_throws : currentRound.player_2_throws;
 
@@ -17,6 +21,9 @@ function getPlayerScore(game, player1) {
 }
 
 function determineNumThrows(game, player1) {
+	if (game.game_rounds.length === 0) {
+		return 0
+	}
 	const currentRound = game.game_rounds[game.game_rounds.length -1];
 
 	const throws = player1 ? currentRound.player_1_throws : currentRound.player_2_throws;
@@ -47,6 +54,10 @@ function determineThrower(game) {
 	}
 
 	const currentRound = game.game_rounds[game.game_rounds.length -1];
+	if (game.game_rounds.length === 0) {
+		// if the game hasn't started yet
+		return {player1: null, winnerId: null};
+	}
 	const firstThrowPlayer1 = currentRound.first_throw_player_id === game.in_progress_player_1.id;
 	if (firstThrowPlayer1) {
 		if (determineNumThrows(game, true) === determineNumThrows(game, false)) {
@@ -69,8 +80,8 @@ function determineThrower(game) {
 			}
 		}
 	}
-
-	return {player1, winnerId};
+	// todo this return is wrong (found this state returning to the page in mid-game
+	return {player1: true, winnerId: null};
 }
 
 export default {

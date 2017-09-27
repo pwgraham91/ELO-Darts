@@ -96,12 +96,10 @@ def group_throws(throws):
     throw_round = []
 
     for counter, throw in enumerate(throws):
+        throw_round.append(throw.dict)
         if ((counter + 1) % 3 == 0) and counter != 0:
-            throw_round.append(throw.hit_score)
             throws_group.append(throw_round)
             throw_round = []
-        else:
-            throw_round.append(throw.dict)
 
     if len(throw_round) > 0:
         throws_group.append(throw_round)
