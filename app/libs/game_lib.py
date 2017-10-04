@@ -140,7 +140,7 @@ def game_dict(session, game):
             'first_throw_player_id': _round.first_throw_player_id,
             'in_progress_player_1_id': game.in_progress_player_1_id,
             'in_progress_player_2_id': game.in_progress_player_2_id,
-            'round_winner': _round.round_winner
+            'round_winner_id': _round.round_winner_id
         }
 
         # get throws and add to round_dict
@@ -162,3 +162,11 @@ def game_dict(session, game):
 
     g_dict['game_rounds'] = rounds
     return g_dict
+
+
+def calc_rounds_to_win_game(best_of):
+    if best_of % 2 == 0:
+        # even number (just make it an odd number by subtracting 1 and going from that)
+        best_of -= 1
+    return (best_of / 2) + 1
+

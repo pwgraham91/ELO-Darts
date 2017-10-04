@@ -7,7 +7,7 @@ from app import app, db
 from app.libs import game_lib
 from app.libs.remove_game_lib import remove_game
 from app.models import User, Game, Round, Throw
-from app.views.handlers.game_handler import add_game
+from app.views.handlers.game_handler import add_game, handle_round_winner
 from config import slack_token
 
 
@@ -75,8 +75,8 @@ def start_game_post():
         in_progress_player_1_id=flask.g.user.id,
         in_progress_player_2_id=int(flask.request.json['player_2_id']),
         score_to_0=int(flask.request.json['score_to_0']),
-        double_out=flask.request.json['double_out'] == 'on',
-        rebuttal=flask.request.json['rebuttal'] == 'on',
+        double_out=flask.request.json['double_out'],
+        rebuttal=flask.request.json['rebuttal'],
         best_of=int(flask.request.json['best_of'])
     )
     session.add(game)
@@ -182,6 +182,11 @@ def throw_dart():
         round_id=round_id
     )
     session.add(new_throw)
+
+    round_winner_id = flask.request.json.get('round_winner_id')
+    if round_winner_id:
+        handle_round_winner(session, round_id, round_winner_id)
+
     session.commit()
 
     return flask.Response(json.dumps(game_lib.game_dict(session, new_throw.round.game)), mimetype=u'application/json')

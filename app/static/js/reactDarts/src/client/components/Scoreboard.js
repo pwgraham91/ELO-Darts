@@ -6,7 +6,8 @@ const Scoreboard = React.createClass({
 	render() {
 		return (
 			<div className="scoreboard" style={{
-				flexGrow: 1
+				flexGrow: 1,
+				marginLeft: '35px'
 			}}>
 				<PlayerScore {...this.props} player1={true} />
 				<PlayerScore {...this.props} player1={false} />

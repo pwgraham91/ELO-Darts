@@ -12,3 +12,12 @@ export function throwDart(score, targetId) {
 		targetId
 	}
 }
+
+export function resetState(response) {
+	console.log('resetting state action')
+	// todo wire to dispatch
+	return {
+		type: 'RESET_STATE',
+		response
+	}
+}

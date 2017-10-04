@@ -4,14 +4,23 @@ const StartGameForm = React.createClass({
 	handleSubmit(e) {
 		e.preventDefault();
 
+		var bestOf = this.best_of.value;
+		if (bestOf % 2 == 0) {
+			// if it's an even number, make it odd by subtracting 1
+			bestOf -= 1;
+		} else if (bestOf < 1) {
+			// if it's 0 or negative, make it 3
+			bestOf = 3;
+		}
+
 		fetch('/games/start/',
 			{
 				method: 'POST',
 				body: JSON.stringify({
 					'score_to_0': this.refs.score_to_0.value,
-					'best_of': this.refs.best_of.value,
-					'double_out': this.refs.double_out.value,
-					'rebuttal': this.refs.rebuttal.value,
+					'best_of': bestOf,
+					'double_out': this.refs.double_out.checked,
+					'rebuttal': this.refs.rebuttal.checked,
 					'player_2_id': this.refs.player_2_id.value
 				}),
 				credentials: 'include',

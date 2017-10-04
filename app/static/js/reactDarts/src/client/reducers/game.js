@@ -1,4 +1,5 @@
 import funcs from '../handlers';
+import {resetState} from "../actions/actionCreators";
 
 function game(state = [], action) {
 
@@ -64,11 +65,13 @@ function game(state = [], action) {
 			}
 
 			// check for winner
-			var throwerDict = funcs.determineThrower(clonedState);
+			throwerDict = funcs.determineThrower(clonedState);
 
+			var loading = false;
 			if (throwerDict.winnerId) {
-				// todo: pass round winner to the POST
-				// todo: start new round or finish game
+				_throw.round_winner_id = throwerDict.winnerId;
+				loading = true;
+				clonedState.loading = loading;
 			}
 
 			fetch('/games/throw_dart/',
@@ -85,7 +88,17 @@ function game(state = [], action) {
 						'Accept': 'application/json'
 					}
 				}
-			);
+			).then(function (response) {
+				return response.json()
+			}).then(function (response) {
+				if (loading) {
+					// todo use redux saga to handle this
+					resetState(response);
+				}
+			}).catch(function (response) {
+				console.log('error!');
+				console.log(response);
+			});
 
 			return clonedState;
 
@@ -93,6 +106,11 @@ function game(state = [], action) {
 			// todo undo state and send request to undo last dart from this game
 			return state;
 
+		case 'RESET_STATE':
+			//
+			console.log('resetting state')
+			debugger
+			return state;
 		default:
 			return state;
 	}
