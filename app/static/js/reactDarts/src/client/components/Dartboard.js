@@ -22,7 +22,7 @@ const Dartboard = React.createClass({
 			}
 		}
 
-		this.props.throwDart(score, targetId);
+		this.props.throwDart(this.props.game, score, targetId);
 	},
 
 	render() {

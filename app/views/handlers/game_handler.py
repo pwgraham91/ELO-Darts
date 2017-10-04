@@ -13,6 +13,12 @@ def handle_add_game_calculations(session, game, winner, loser):
     winner_rating, loser_rating = trueskill.rate_1vs1(trueskill.Rating(winner.elo), trueskill.Rating(loser.elo))
     winner_elo, loser_elo = winner_rating.mu, loser_rating.mu
 
+    game.winner_elo_score = winner_elo
+    game.loser_elo_score = loser_elo
+
+    winner.elo = winner_elo
+    loser.elo = loser_elo
+
     winner_average = calc_user_current_average(session, winner.id, get_user_most_recent_game(session, winner.id),
                                                add_score=[winner_elo])
     winner.average_elo = winner_average
@@ -20,14 +26,9 @@ def handle_add_game_calculations(session, game, winner, loser):
                                               add_score=[loser_elo])
     loser.average_elo = loser_average
 
-    winner.elo = winner_elo
-    loser.elo = loser_elo
-
     winner.wins += 1
     loser.losses += 1
 
-    game.winner_elo_score = winner_elo
-    game.loser_elo_score = loser_elo
     game.created_at = datetime.datetime.utcnow()
     game.winner_average_score = winner_average
     game.loser_average_score = loser_average
@@ -74,18 +75,9 @@ def handle_round_winner(session, round_id, round_winner_id):
         handle_game_winner(session, game, game.in_progress_player_1, game.in_progress_player_2)
     elif player_2_round_wins == rounds_to_win_game:
         handle_game_winner(session, game, game.in_progress_player_2, game.in_progress_player_1)
-    else:
-        # if no one won the game, create a new round
-        new_round = Round(
-            game=game
-        )
-        session.add(new_round)
 
 
 def handle_game_winner(session, game, winner, loser):
-    game.winner = winner
-    game.loser_id = loser
-
-    game.submitted_by = flask.g.user.id
+    game.submitted_by_id = flask.g.user.id
 
     handle_add_game_calculations(session, game, winner, loser)

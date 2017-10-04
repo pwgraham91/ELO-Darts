@@ -6,7 +6,10 @@ import Dartboard from './Dartboard';
 
 const Play = React.createClass({
 	throwOneOrPlayRender() {
-		if (this.props.game.game_rounds.length === 0 || !this.props.game.game_rounds[this.props.game.game_rounds.length - 1].first_throw_player_id) {
+		if (this.props.game.winner_id) {
+			<h1>Game over</h1>
+		}
+		if (this.props.game.game_rounds.length === 0 || !this.props.game.game_rounds[this.props.game.game_rounds.length - 1].first_throw_player_id || this.props.game.game_rounds[this.props.game.game_rounds.length - 1].round_winner_id) {
 			return (
 				<ThrowOneModal {...this.props} />
 			)

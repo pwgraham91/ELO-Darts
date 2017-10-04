@@ -4,7 +4,7 @@ const StartGameForm = React.createClass({
 	handleSubmit(e) {
 		e.preventDefault();
 
-		var bestOf = this.best_of.value;
+		var bestOf = this.refs.best_of.value;
 		if (bestOf % 2 == 0) {
 			// if it's an even number, make it odd by subtracting 1
 			bestOf -= 1;
@@ -20,7 +20,7 @@ const StartGameForm = React.createClass({
 					'score_to_0': this.refs.score_to_0.value,
 					'best_of': bestOf,
 					'double_out': this.refs.double_out.checked,
-					'rebuttal': this.refs.rebuttal.checked,
+					'rebuttal': false, // this.refs.rebuttal.checked,
 					'player_2_id': this.refs.player_2_id.value
 				}),
 				credentials: 'include',
@@ -83,7 +83,7 @@ const StartGameForm = React.createClass({
 						</label>
 						</p>
 					</div>
-					<div className="field">
+					<div className="field hidden">
 						<p className="control">
 							<label htmlFor="rebuttal" className="checkbox">
 								<input className="checkbox" type="checkbox" ref="rebuttal" defaultChecked={true}/>

@@ -123,8 +123,8 @@ def game_dict(session, game):
         'loser_elo_score': game.loser_elo_score,
         'loser_average_score': game.loser_average_score,
         'submitted_by_id': game.submitted_by_id,
-        'in_progress_player_1': game.in_progress_player_1.dict,
-        'in_progress_player_2': game.in_progress_player_2.dict,
+        'in_progress_player_1': game.in_progress_player_1.dict if game.in_progress_player_1 else None,
+        'in_progress_player_2': game.in_progress_player_2.dict if game.in_progress_player_2 else None,
     }
 
     round_objects = session.query(Round).filter(

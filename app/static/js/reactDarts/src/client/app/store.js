@@ -1,7 +1,9 @@
-import { createStore } from 'redux';
-import { syncHistoryWithStore } from 'react-router-redux';
 import { browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
+import { createStore, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
 
+import mySaga from './sagas'
 import rootReducer from '../reducers/index';
 import funcs from '../handlers';
 
@@ -17,7 +19,11 @@ const defaultState = {
 	game: window.game || null
 };
 
-const store = createStore(rootReducer, defaultState);
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(rootReducer, defaultState, applyMiddleware(sagaMiddleware));
+
+sagaMiddleware.run(mySaga);
 
 export const history = syncHistoryWithStore(browserHistory, store);
 
