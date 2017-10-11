@@ -79,14 +79,14 @@ def run_next_game(session, next_game_ids, affected_player_ids, updated_games_ids
     if len(next_game_ids):
         next_game_id = min(next_game_ids)
         next_game = session.query(Game).get(next_game_id)
-        w, l = replay_game(session, next_game, affected_player_ids)
+        winner, loser = replay_game(session, next_game, affected_player_ids)
         updated_games_ids.add(next_game_id)
         next_game_ids.remove(next_game_id)
 
-        next_winner_game = get_next_game(session, w.id, next_game.id, updated_games_ids)
+        next_winner_game = get_next_game(session, winner.id, next_game, updated_games_ids)
         if next_winner_game:
             next_game_ids.add(next_winner_game.id)
-        next_loser_game = get_next_game(session, l.id, next_game.id, updated_games_ids)
+        next_loser_game = get_next_game(session, loser.id, next_game, updated_games_ids)
         if next_loser_game:
             next_game_ids.add(next_loser_game.id)
 
