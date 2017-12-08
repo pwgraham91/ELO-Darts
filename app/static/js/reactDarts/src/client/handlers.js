@@ -36,6 +36,12 @@ function determineNumThrows(game, player1) {
 }
 
 function determineThrower(game) {
+	// this is getting deprecated. V2 will include a version of this where we calculate state on the front end. For now,
+	// it is much easier to calculate state on the backend and pass the state after every throw
+
+
+
+
 	// has one player closed out?
 	if (getPlayerScore(game, true) === 0) {
 		if (game.rebuttal && (determineNumThrows(game, true) > determineNumThrows(game, false))) {

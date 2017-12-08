@@ -24,6 +24,7 @@ function game(state = [], action) {
 
 			return clonedState;
 		case 'THROW_DART':
+			console.log("this is deprecated. it should not be called until v2 live games")
 			const clonedState = action.clonedState;
 			const _throw = action._throw;
 			fetch('/games/throw_dart/',
@@ -44,7 +45,7 @@ function game(state = [], action) {
 
 			return action.clonedState;
 
-		case 'WINNER_RESPONSE':
+		case 'THROW_RESPONSE':
 			// reset state to response from server
 			return action.response;
 

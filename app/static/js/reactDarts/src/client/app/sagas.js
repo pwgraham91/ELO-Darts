@@ -1,7 +1,7 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
-function* fetchUser(action) {
+function* throwDart(action) {
 	const _throw = action._throw;
 	const fetchPost = yield fetch('/games/throw_dart/',
 		{
@@ -20,13 +20,13 @@ function* fetchUser(action) {
 	).then(function (response) {
 		return response.json()
 	});
-	yield put({type: "WINNER_RESPONSE", response: fetchPost});
+	yield put({type: "THROW_RESPONSE", response: fetchPost});
 }
 
 function* mySaga() {
 	console.log('fetching req')
 
-	yield takeEvery("THROW_WINNING_DART", fetchUser);
+	yield takeEvery("THROW_DART", throwDart);
 
 	console.log('fetching req 2')
 

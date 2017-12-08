@@ -10,6 +10,21 @@ export function throwOne(player_id) {
 export function throwDart(currentState, score, targetId) {
 	var clonedState = Object.assign({}, currentState);
 
+	var _throw = {
+		hit_score: score,
+		hit_area: targetId,
+	};
+
+	return {
+		type: 'THROW_DART',
+		clonedState,
+		_throw,
+	}
+
+
+	// this is getting deprecated. V2 will include a version of this where we calculate state on the front end. For now,
+	// it is much easier to calculate state on the backend and pass the state after every throw
+
 	var points_left_before_throw, throws, player_id;
 
 	var throwerDict = funcs.determineThrower(clonedState);

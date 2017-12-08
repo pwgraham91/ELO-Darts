@@ -2,7 +2,7 @@ import datetime
 import flask
 import trueskill
 
-from app.libs.game_lib import calc_user_current_average, get_user_most_recent_game, calc_rounds_to_win_game
+from app.libs.game_lib import calc_user_current_average, get_user_most_recent_game, calc_rounds_to_win_game, get_round_dict
 from app.models import Game, Round
 
 
@@ -81,3 +81,10 @@ def handle_game_winner(session, game, winner, loser):
     game.submitted_by_id = flask.g.user.id
 
     handle_add_game_calculations(session, game, winner, loser)
+
+
+def calc_current_thrower(session, _round):
+    round_dict = get_round_dict(session, _round)
+
+    # todo finish this function
+    return

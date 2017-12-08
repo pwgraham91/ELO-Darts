@@ -7,7 +7,7 @@ from app import app, db
 from app.libs import game_lib
 from app.libs.remove_game_lib import remove_game
 from app.models import User, Game, Round, Throw
-from app.views.handlers.game_handler import add_game, handle_round_winner
+from app.views.handlers.game_handler import add_game, handle_round_winner, calc_current_thrower
 from config import slack_token
 
 
@@ -164,7 +164,7 @@ def throw_one():
 @login_required
 def throw_dart():
     session = db.session
-    round_id = session.query(Round.id).join(
+    _round = session.query(Round).join(
         Game,
         sqlalchemy.and_(
             Round.game_id == Game.id,
@@ -172,20 +172,23 @@ def throw_dart():
         )
     ).filter(
         Round.round_winner_id.is_(None)
-    ).scalar()
+    ).one()
+
+    # todo need to calc thrower and points left before throw
+    current_thrower = calc_current_thrower(session, _round)
 
     new_throw = Throw(
         hit_score=int(flask.request.json['hit_score']),
         hit_area=flask.request.json['hit_area'],
         points_left_before_throw=int(flask.request.json['points_left_before_throw']),
         player_id=int(flask.request.json['player_id']),
-        round_id=round_id
+        round_id=_round.id
     )
     session.add(new_throw)
 
     round_winner_id = flask.request.json.get('round_winner_id')
     if round_winner_id:
-        handle_round_winner(session, round_id, round_winner_id)
+        handle_round_winner(session, _round.id, round_winner_id)
 
     session.commit()
 

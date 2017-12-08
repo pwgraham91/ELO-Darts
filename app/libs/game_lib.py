@@ -91,7 +91,7 @@ def get_user_most_recent_game(session, user_id):
         return game_id_result[0]
 
 
-def group_throws(throws):
+def _group_throws(throws):
     throws_group = []
     throw_round = []
 
@@ -105,6 +105,36 @@ def group_throws(throws):
         throws_group.append(throw_round)
 
     return throws_group
+
+
+def get_round_dict(session, _round):
+    game = _round.game
+
+    round_dict = {
+        'id': _round.id,
+        'game_id': _round.game_id,
+        'first_throw_player_id': _round.first_throw_player_id,
+        'in_progress_player_1_id': game.in_progress_player_1_id,
+        'in_progress_player_2_id': game.in_progress_player_2_id,
+        'round_winner_id': _round.round_winner_id
+    }
+
+    # get throws and add to round_dict
+    player_1_throws = session.query(Throw).filter(
+        Throw.round_id == _round.id,
+        Throw.player_id == game.in_progress_player_1_id
+    ).order_by(Throw.id.asc()).all()
+
+    round_dict['player_1_throws'] = _group_throws(player_1_throws)
+
+    player_2_throws = session.query(Throw).filter(
+        Throw.round_id == _round.id,
+        Throw.player_id == game.in_progress_player_2_id
+    ).order_by(Throw.id.asc()).all()
+
+    round_dict['player_2_throws'] = _group_throws(player_2_throws)
+
+    return round_dict
 
 
 def game_dict(session, game):
@@ -133,32 +163,7 @@ def game_dict(session, game):
 
     rounds = []
     for _round in round_objects:
-
-        round_dict = {
-            'id': _round.id,
-            'game_id': _round.game_id,
-            'first_throw_player_id': _round.first_throw_player_id,
-            'in_progress_player_1_id': game.in_progress_player_1_id,
-            'in_progress_player_2_id': game.in_progress_player_2_id,
-            'round_winner_id': _round.round_winner_id
-        }
-
-        # get throws and add to round_dict
-        player_1_throws = session.query(Throw).filter(
-            Throw.round_id == _round.id,
-            Throw.player_id == game.in_progress_player_1_id
-        ).order_by(Throw.id.asc()).all()
-
-        round_dict['player_1_throws'] = group_throws(player_1_throws)
-
-        player_2_throws = session.query(Throw).filter(
-            Throw.round_id == _round.id,
-            Throw.player_id == game.in_progress_player_2_id
-        ).order_by(Throw.id.asc()).all()
-
-        round_dict['player_2_throws'] = group_throws(player_2_throws)
-
-        rounds.append(round_dict)
+        rounds.append(get_round_dict(session, _round))
 
     g_dict['game_rounds'] = rounds
     return g_dict
