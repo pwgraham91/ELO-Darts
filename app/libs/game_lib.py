@@ -91,22 +91,50 @@ def get_user_most_recent_game(session, user_id):
         return game_id_result[0]
 
 
-def group_throws(throws):
+def _group_throws(throws):
     throws_group = []
     throw_round = []
 
     for counter, throw in enumerate(throws):
+        throw_round.append(throw.dict)
         if ((counter + 1) % 3 == 0) and counter != 0:
-            throw_round.append(throw.hit_score)
             throws_group.append(throw_round)
             throw_round = []
-        else:
-            throw_round.append(throw.hit_score)
 
     if len(throw_round) > 0:
         throws_group.append(throw_round)
 
     return throws_group
+
+
+def get_round_dict(session, _round):
+    game = _round.game
+
+    round_dict = {
+        'id': _round.id,
+        'game_id': _round.game_id,
+        'first_throw_player_id': _round.first_throw_player_id,
+        'in_progress_player_1_id': game.in_progress_player_1_id,
+        'in_progress_player_2_id': game.in_progress_player_2_id,
+        'round_winner_id': _round.round_winner_id
+    }
+
+    # get throws and add to round_dict
+    player_1_throws = session.query(Throw).filter(
+        Throw.round_id == _round.id,
+        Throw.player_id == game.in_progress_player_1_id
+    ).order_by(Throw.id.asc()).all()
+
+    round_dict['player_1_throws'] = _group_throws(player_1_throws)
+
+    player_2_throws = session.query(Throw).filter(
+        Throw.round_id == _round.id,
+        Throw.player_id == game.in_progress_player_2_id
+    ).order_by(Throw.id.asc()).all()
+
+    round_dict['player_2_throws'] = _group_throws(player_2_throws)
+
+    return round_dict
 
 
 def game_dict(session, game):
@@ -125,41 +153,25 @@ def game_dict(session, game):
         'loser_elo_score': game.loser_elo_score,
         'loser_average_score': game.loser_average_score,
         'submitted_by_id': game.submitted_by_id,
-        'in_progress_player_1_id': game.in_progress_player_1_id,
-        'in_progress_player_2_id': game.in_progress_player_2_id,
+        'in_progress_player_1': game.in_progress_player_1.dict if game.in_progress_player_1 else None,
+        'in_progress_player_2': game.in_progress_player_2.dict if game.in_progress_player_2 else None,
     }
 
     round_objects = session.query(Round).filter(
         Round.game_id == game.id
-    ).all()
+    ).order_by(Round.id.asc()).all()
 
     rounds = []
     for _round in round_objects:
+        rounds.append(get_round_dict(session, _round))
 
-        round_dict = {
-            'id': _round.id,
-            'game_id': _round.game_id,
-            'first_throw_player_id': _round.first_throw_player_id,
-            'in_progress_player_1_id': game.in_progress_player_1_id,
-            'in_progress_player_2_id': game.in_progress_player_2_id
-        }
-
-        # get throws and add to round_dict
-        player_1_throws = session.query(Throw).filter(
-            Throw.round_id == _round.id,
-            Throw.player_id == game.in_progress_player_1_id
-        ).all()
-
-        round_dict['player_1_throws'] = group_throws(player_1_throws)
-
-        player_2_throws = session.query(Throw).filter(
-            Throw.round_id == _round.id,
-            Throw.player_id == game.in_progress_player_2_id
-        ).all()
-
-        round_dict['player_2_throws'] = group_throws(player_2_throws)
-
-        rounds.append(round_dict)
-
-    g_dict['rounds'] = rounds
+    g_dict['game_rounds'] = rounds
     return g_dict
+
+
+def calc_rounds_to_win_game(best_of):
+    if best_of % 2 == 0:
+        # even number (just make it an odd number by subtracting 1 and going from that)
+        best_of -= 1
+    return (best_of / 2) + 1
+

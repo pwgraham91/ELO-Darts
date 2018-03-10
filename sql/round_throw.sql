@@ -27,7 +27,8 @@ CREATE TABLE throw(
 	round_id bigint NOT NULL,
 	player_id bigint NOT NULL,
 	hit_score INTEGER NOT NULL,
-	hit_area VARCHAR NOT NULL
+	hit_area VARCHAR NOT NULL,
+	points_left_before_throw INTEGER NOT NULL
 );
 ALTER TABLE throw ADD CONSTRAINT round_id_fkey FOREIGN KEY (round_id) REFERENCES "round"(id) ON DELETE CASCADE;
 ALTER TABLE throw ADD CONSTRAINT player_id_fkey FOREIGN KEY (player_id) REFERENCES "user"(id) ON DELETE CASCADE;

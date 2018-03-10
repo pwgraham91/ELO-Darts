@@ -1,12 +1,13 @@
-import json
-
 import flask
 from flask.ext.login import login_required
+import json
+import sqlalchemy
 
 from app import app, db
+from app.libs import game_lib
 from app.libs.remove_game_lib import remove_game
-from app.models import User, Game
-from app.views.handlers.game_handler import add_game
+from app.models import User, Game, Round, Throw
+from app.views.handlers.game_handler import add_game, handle_round_winner, calc_current_thrower
 from config import slack_token
 
 
@@ -66,33 +67,50 @@ def add_slack_game_post():
                                                                               round(loser.elo, 3))
 
 
-@app.route('/games/play/start', methods=['POST'])
+@app.route('/games/start/', methods=['POST'])
 @login_required
 def start_game_post():
     session = db.session
-    # todo make this read from json
-    in_progress_player_1_id = 1
-    in_progress_player_2_id = 2
     game = Game(
-        in_progress_player_1_id=in_progress_player_1_id,
-        in_progress_player_2_id=in_progress_player_2_id
+        in_progress_player_1_id=flask.g.user.id,
+        in_progress_player_2_id=int(flask.request.json['player_2_id']),
+        score_to_0=int(flask.request.json['score_to_0']),
+        double_out=flask.request.json['double_out'],
+        rebuttal=flask.request.json['rebuttal'],
+        best_of=int(flask.request.json['best_of'])
     )
     session.add(game)
     session.commit()
-    return 'game id and maybe redirect to play game'
+    return flask.Response(json.dumps({
+        'game_id': game.id,
+    }), mimetype=u'application/json')
 
 
-@app.route('/games/play/<string:game_id>')
+@app.route('/games/play/start')
+@login_required
+def start_game():
+    session = db.session
+    active_users = session.query(User.id, User.name).filter(
+        User.active.is_(True)
+    ).all()
+    return flask.render_template('start_game.html',
+                                 title='Cratejoy Darts',
+                                 active_users=active_users)
+
+
+@app.route('/games/play/<int:game_id>')
 @login_required
 def play_game(game_id):
     session = db.session
-    # game id can be 'start'
-    game = session.query(Game).get(game_id)
-    # todo check for game and send error
-
+    game = session.query(Game).filter(
+        Game.id == game_id,
+        Game.winner_id.is_(None)
+    ).first()
+    if not game:
+        return 'No In Progress Game Found'
     return flask.render_template('play_game.html',
                                  title='Cratejoy Darts',
-                                 game=game)
+                                 game=game_lib.game_dict(session, game))
 
 
 @app.route('/games/remove/<int:game_id>', methods=['DELETE'])
@@ -124,3 +142,54 @@ def remove_game_get(game_id):
         'affected_player_ids': list(affected_player_ids),
         'updated_game_ids': list(updated_game_ids)
     }), mimetype=u'application/json')
+
+
+@app.route('/games/throw_one/', methods=['POST'])
+@login_required
+def throw_one():
+    session = db.session
+
+    added_round = flask.request.json['game_rounds'][-1]
+    new_round = Round(
+        game_id=flask.request.json['id'],
+        first_throw_player_id=added_round['first_throw_player_id']
+    )
+    session.add(new_round)
+    session.commit()
+
+    return flask.Response(json.dumps(game_lib.game_dict(session, new_round.game)), mimetype=u'application/json')
+
+
+@app.route('/games/throw_dart/', methods=['POST'])
+@login_required
+def throw_dart():
+    session = db.session
+    _round = session.query(Round).join(
+        Game,
+        sqlalchemy.and_(
+            Round.game_id == Game.id,
+            Game.id == int(flask.request.json['game_id'])
+        )
+    ).filter(
+        Round.round_winner_id.is_(None)
+    ).one()
+
+    # todo need to calc thrower and points left before throw
+    current_thrower = calc_current_thrower(session, _round)
+
+    new_throw = Throw(
+        hit_score=int(flask.request.json['hit_score']),
+        hit_area=flask.request.json['hit_area'],
+        points_left_before_throw=int(flask.request.json['points_left_before_throw']),
+        player_id=int(flask.request.json['player_id']),
+        round_id=_round.id
+    )
+    session.add(new_throw)
+
+    round_winner_id = flask.request.json.get('round_winner_id')
+    if round_winner_id:
+        handle_round_winner(session, _round.id, round_winner_id)
+
+    session.commit()
+
+    return flask.Response(json.dumps(game_lib.game_dict(session, new_throw.round.game)), mimetype=u'application/json')
